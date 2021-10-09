@@ -7,7 +7,7 @@ export default function ChatComponent(): JSX.Element {
 	const { logout, user, isLoading } = useAuth0();
 
 	if (isLoading) {
-		return <LoadingComponent />;
+		return <LoadingComponent reason='Loading user information..' />;
 	}
 
 	return (
