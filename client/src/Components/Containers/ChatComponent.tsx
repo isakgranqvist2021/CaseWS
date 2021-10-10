@@ -1,5 +1,7 @@
 /** @format */
 
+import MessageComponent from 'Components/Display/MessageComponent';
+
 import styled from 'styled-components';
 
 const Chat = styled.div`
@@ -7,12 +9,20 @@ const Chat = styled.div`
 	flex-grow: 1;
 	width: 100%;
 	overflow: auto;
+	display: flex;
+	flex-direction: column;
 `;
 
-export default function MessagesComponent(): JSX.Element {
+export default function ChatComponent(): JSX.Element {
 	return (
 		<Chat>
-			<p>Chat!</p>
+			{new Array(250).fill(0).map((msg: any, i: number) => (
+				<MessageComponent
+					message={'message ' + i}
+					nickname={'Isak'}
+					date={new Date().toLocaleString()}
+				/>
+			))}
 		</Chat>
 	);
 }
