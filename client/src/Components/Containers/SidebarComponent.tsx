@@ -1,6 +1,7 @@
 /** @format */
 
 import { useAuth0 } from '@auth0/auth0-react';
+import SidebarHeaderComponent from 'Components/Display/SidebarHeaderComponent';
 
 import styled from 'styled-components';
 
@@ -33,25 +34,6 @@ const Body = styled.div`
 	height: 100vh;
 `;
 
-const Header = styled.header`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	text-align: center;
-	padding: 50px 0 20px 0;
-
-	p {
-		margin-top: 20px;
-	}
-
-	img {
-		height: 150px;
-		width: 150px;
-		object-fit: contain;
-		border-radius: 50%;
-	}
-`;
-
 const Content = styled.div`
 	flex-grow: 1;
 	padding: 50px 0;
@@ -76,10 +58,10 @@ export default function SidebarComponent(props: Props): JSX.Element {
 	return (
 		<Aside>
 			<Body>
-				<Header>
-					<img src={props.picture} />
-					<p>{props.nickname}</p>
-				</Header>
+				<SidebarHeaderComponent
+					picture={props.picture}
+					nickname={props.nickname}
+				/>
 				<Content>
 					<p>aside content</p>
 				</Content>
