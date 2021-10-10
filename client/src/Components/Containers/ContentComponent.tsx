@@ -21,7 +21,7 @@ const Content = styled.div`
 `;
 
 export default function ContentComponent(props: IUser) {
-	let ws: any;
+	let ws = new WebSocket(settings.ws);
 
 	const [chat, setChat] = useState<IChat | null>();
 
@@ -56,14 +56,27 @@ export default function ContentComponent(props: IUser) {
 
 	useEffect(() => {
 		chatStore.subscribe(() => setChat(chatStore.getState()));
-	}, [ws]);
+	}, []);
 
 	useEffect(() => {
 		if (!chat) return;
 
-		ws = new WebSocket(settings.ws);
-
 		ws.onopen = () => {
+			ioStore.subscribe(() => {
+				let update = ioStore.getState();
+				if (!update) return;
+
+				let data = JSON.stringify({
+					type: 'leave',
+					payload: {
+						room: chat?._id,
+						socket: props.sub,
+					},
+				});
+
+				ws.send(data);
+			});
+
 			let data = JSON.stringify({
 				type: 'join',
 				payload: {
@@ -74,28 +87,12 @@ export default function ContentComponent(props: IUser) {
 			});
 
 			ws.send(data);
+
+			ws.onmessage = (payload: any) => {
+				let data = JSON.parse(payload.data);
+				addMessage(data);
+			};
 		};
-
-		ws.onmessage = (payload: any) => {
-			let data = JSON.parse(payload.data);
-			setChat({ ...chat, messages: [...chat.messages, data] });
-			addMessage(data);
-		};
-
-		ioStore.subscribe(() => {
-			let update = ioStore.getState();
-			if (!update) return;
-
-			let data = JSON.stringify({
-				type: 'leave',
-				payload: {
-					room: chat?._id,
-					socket: props.sub,
-				},
-			});
-
-			ws.send(data);
-		});
 
 		return () => ws.close();
 	}, [chat]);
