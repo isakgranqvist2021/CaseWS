@@ -4,7 +4,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 
-import OutletComponent from 'Components/OutletComponent';
+import OutletComponent from 'Components/Containers/OutletComponent';
+
+import 'Styles/global.css';
 
 ReactDOM.render(
 	<React.StrictMode>
