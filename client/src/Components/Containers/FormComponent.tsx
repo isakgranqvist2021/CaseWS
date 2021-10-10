@@ -1,5 +1,6 @@
 /** @format */
 
+import { useState, useEffect, ChangeEvent } from 'react';
 import styled from 'styled-components';
 
 const Form = styled.div`
@@ -18,10 +19,18 @@ const Form = styled.div`
 `;
 
 export default function FormComponent(): JSX.Element {
+	const [message, setMessage] = useState<string>('');
+
+	const send = () => {};
+
 	return (
 		<Form>
-			<input placeholder='Message..' />
-			<button>Send</button>
+			<input
+				placeholder='Message..'
+				value={message}
+				onChange={(e: any) => setMessage(e.target.value)}
+			/>
+			<button onClick={send}>Send</button>
 		</Form>
 	);
 }

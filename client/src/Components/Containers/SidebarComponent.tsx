@@ -58,12 +58,9 @@ export default function SidebarComponent(props: Props): JSX.Element {
 	return (
 		<Aside>
 			<Body>
-				<SidebarHeaderComponent
-					picture={props.picture}
-					nickname={props.nickname}
-				/>
+				<SidebarHeaderComponent {...props} />
 				<Content>
-					<p>aside content</p>
+					<p>qwt</p>
 				</Content>
 				<Footer>
 					<button

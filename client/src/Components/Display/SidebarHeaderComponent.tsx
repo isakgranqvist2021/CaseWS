@@ -1,5 +1,6 @@
 /** @format */
 
+import { POST } from 'Utils/http';
 import styled from 'styled-components';
 
 const Header = styled.header`
@@ -19,18 +20,41 @@ const Header = styled.header`
 		object-fit: contain;
 		border-radius: 50%;
 	}
+
+	button {
+		margin-top: 20px;
+		padding: 10px 20px;
+	}
 `;
 
 interface Props {
-	picture?: string;
+	email?: string;
+	email_verified?: boolean;
+	name?: string;
 	nickname?: string;
+	picture?: string;
+	sub?: string;
+	updated_at?: Date | string;
 }
 
 export default function SidebarHeaderComponent(props: Props): JSX.Element {
+	const submit = async () => {
+		const abortController = new AbortController();
+
+		const response = await POST({
+			path: '/chat/create',
+			body: JSON.stringify(props),
+			signal: abortController.signal,
+		});
+
+		console.log(response);
+	};
+
 	return (
 		<Header>
 			<img src={props.picture} />
 			<p>{props.nickname}</p>
+			<button onClick={submit}>New Chat</button>
 		</Header>
 	);
 }
