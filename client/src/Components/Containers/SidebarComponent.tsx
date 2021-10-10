@@ -50,7 +50,7 @@ export default function SidebarComponent(props: IUser): JSX.Element {
 			<Body>
 				<SidebarHeaderComponent {...props} />
 				<Content>
-					<ChatsComponent sub={props.sub} />
+					<ChatsComponent {...props} />
 				</Content>
 				<Footer>
 					<button

@@ -1,6 +1,6 @@
 /** @format */
 
-const serverAddr: string = 'http://localhost:8080';
+import settings from './settings';
 
 interface RequestConfig {
 	path: string;
@@ -15,7 +15,7 @@ interface HttpResponse {
 }
 
 export const GET = async (config: RequestConfig): Promise<HttpResponse> => {
-	return await fetch(serverAddr + config.path, {
+	return await fetch(settings.serverAddr + config.path, {
 		method: 'GET',
 		signal: config.signal,
 		headers: {
@@ -25,7 +25,7 @@ export const GET = async (config: RequestConfig): Promise<HttpResponse> => {
 };
 
 export const POST = async (config: RequestConfig): Promise<HttpResponse> => {
-	return await fetch(serverAddr + config.path, {
+	return await fetch(settings.serverAddr + config.path, {
 		method: 'POST',
 		signal: config.signal,
 		body: config.body,

@@ -1,7 +1,6 @@
 /** @format */
 
 import MessageComponent from 'Components/Display/MessageComponent';
-
 import styled from 'styled-components';
 
 const Chat = styled.div`
@@ -13,15 +12,15 @@ const Chat = styled.div`
 	flex-direction: column;
 `;
 
-export default function ChatComponent(): JSX.Element {
+export default function ChatComponent(props: IChat): JSX.Element {
 	return (
 		<Chat>
-			{new Array(250).fill(0).map((msg: any, i: number) => (
+			{props.messages.map((msg: any, i: number) => (
 				<MessageComponent
 					key={i}
-					message={'message ' + i}
-					nickname={'Isak'}
-					date={new Date().toLocaleString()}
+					message={msg.message}
+					nickname={msg.nickname}
+					date={msg.createdAt}
 				/>
 			))}
 		</Chat>

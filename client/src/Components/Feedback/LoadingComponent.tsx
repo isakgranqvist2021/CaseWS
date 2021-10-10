@@ -5,7 +5,6 @@ import styled from 'styled-components';
 const Container = styled.div`
 	width: 100vw;
 	height: 100vh;
-	position: fixed;
 	inset: 0;
 	background-color: #3333336e;
 	display: flex;

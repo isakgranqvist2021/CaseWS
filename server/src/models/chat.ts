@@ -34,7 +34,16 @@ const findMany = async (filter: any): Promise<any> => {
 	}
 };
 
+const findOne = async (filter: any): Promise<any> => {
+	try {
+		return await ChatModel.findOne(filter);
+	} catch (err) {
+		return Promise.reject(err);
+	}
+};
+
 export default {
 	create,
+	findOne,
 	findMany,
 };

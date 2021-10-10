@@ -51,7 +51,7 @@ export default function AvatarGroupComponent(props: {
 			{props.images
 				.slice(0, props.max)
 				.map((img: { src: string; alt: string }) => (
-					<AvatarItem>
+					<AvatarItem key={img.src}>
 						<img src={img.src} alt={img.alt} />
 					</AvatarItem>
 				))}

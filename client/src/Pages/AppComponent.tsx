@@ -21,7 +21,7 @@ export default function AppComponent(): JSX.Element {
 	return (
 		<App>
 			<SidebarComponent {...user} />
-			<ContentComponent />
+			<ContentComponent {...user} />
 		</App>
 	);
 }

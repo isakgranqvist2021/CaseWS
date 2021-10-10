@@ -18,10 +18,18 @@ const Form = styled.div`
 	}
 `;
 
-export default function FormComponent(): JSX.Element {
+interface Props extends IUser {
+	send(message: string): void;
+}
+
+export default function FormComponent(props: Props): JSX.Element {
 	const [message, setMessage] = useState<string>('');
 
-	const send = () => {};
+	const send = (): void => {
+		if (!message) return;
+		props.send(message);
+		setMessage('');
+	};
 
 	return (
 		<Form>

@@ -12,10 +12,22 @@ interface IUser {
 	updated_at?: Date | string;
 }
 
+interface IMessage {
+	message: string;
+	room: string;
+	createdAt: Date | string;
+	user: IUser;
+}
+
 interface IChat {
 	_id: string;
 	createdAt: string | Date;
 	updatedAt: string | Date | null;
-	messages: any[];
+	messages: IMessage[];
 	participants: IUser[];
+}
+
+interface IAction {
+	type: string;
+	payload: any;
 }

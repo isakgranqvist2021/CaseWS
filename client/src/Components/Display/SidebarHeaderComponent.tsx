@@ -2,6 +2,7 @@
 
 import { POST } from 'Utils/http';
 import styled from 'styled-components';
+import chatsStore from 'Store/chats.store';
 
 const Header = styled.header`
 	display: flex;
@@ -37,7 +38,11 @@ export default function SidebarHeaderComponent(props: IUser): JSX.Element {
 			signal: abortController.signal,
 		});
 
-		console.log(response);
+		window.alert(response.message);
+
+		if (response.success) {
+			chatsStore.dispatch({ type: 'new', payload: response.data });
+		}
 	};
 
 	return (
