@@ -1,7 +1,18 @@
 /** @format */
 
-import classes from 'Styles/messages.module.css';
+import styled from 'styled-components';
+
+const Chat = styled.div`
+	background-color: rgb(100, 100, 100);
+	flex-grow: 1;
+	width: 100%;
+	overflow: auto;
+`;
 
 export default function MessagesComponent(): JSX.Element {
-	return <div className={classes.chat}></div>;
+	return (
+		<Chat>
+			<p>Chat!</p>
+		</Chat>
+	);
 }

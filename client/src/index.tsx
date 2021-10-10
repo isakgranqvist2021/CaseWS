@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import OutletComponent from 'Components/Containers/OutletComponent';
 
-import 'Styles/global.css';
+import './global.css';
 
 ReactDOM.render(
 	<React.StrictMode>

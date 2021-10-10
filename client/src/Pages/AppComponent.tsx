@@ -2,11 +2,14 @@
 
 import { useAuth0 } from '@auth0/auth0-react';
 
+import styled from 'styled-components';
 import LoadingComponent from 'Components/Feedback/LoadingComponent';
 import SidebarComponent from 'Components/Containers/SidebarComponent';
-
-import classes from 'Styles/app.module.css';
 import ContentComponent from 'Components/Containers/ContentComponent';
+
+const App = styled.div`
+	display: flex;
+`;
 
 export default function AppComponent(): JSX.Element {
 	const { user, isLoading } = useAuth0();
@@ -16,9 +19,9 @@ export default function AppComponent(): JSX.Element {
 	}
 
 	return (
-		<div className={classes.app}>
+		<App>
 			<SidebarComponent {...user} />
 			<ContentComponent />
-		</div>
+		</App>
 	);
 }

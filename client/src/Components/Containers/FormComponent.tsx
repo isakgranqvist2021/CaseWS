@@ -1,7 +1,11 @@
 /** @format */
 
-import classes from 'Styles/form.module.css';
+import styled from 'styled-components';
+
+const Form = styled.div`
+	background-color: #333;
+`;
 
 export default function FormComponent(): JSX.Element {
-	return <div className={classes.form}>FormComponent</div>;
+	return <Form>FormComponent</Form>;
 }
