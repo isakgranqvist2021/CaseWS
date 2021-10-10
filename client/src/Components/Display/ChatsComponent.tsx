@@ -1,13 +1,9 @@
 /** @format */
 
 import { useEffect, useState } from 'react';
-import { GET } from 'Utils/http';
+import { GET, POST } from 'Utils/http';
 import styled from 'styled-components';
 import AvatarGroupComponent from 'Components/Display/AvatarGroupComponent';
-
-import chatStore from 'Store/chat.store';
-import chatsStore from 'Store/chats.store';
-import ioStore from 'Store/io.store';
 
 const Chat = styled.div`
 	display: flex;
@@ -34,47 +30,37 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 		if (response.success) setChats(response.data);
 	};
 
-	const enter = (chat: IChat) => {
-		if (active) {
-			leave(chat);
+	const join = (room: string) => {};
+
+	const leave = (room: string) => {};
+
+	const submit = async () => {
+		const abortController = new AbortController();
+
+		const response = await POST({
+			path: '/chat/create',
+			body: JSON.stringify(props),
+			signal: abortController.signal,
+		});
+
+		window.alert(response.message);
+
+		if (response.success) {
+			setChats([...chats, response.data]);
 		}
-
-		setActive(chat._id);
-		return chatStore.dispatch({
-			type: 'set',
-			payload: chat,
-		});
-	};
-
-	const leave = (chat: IChat) => {
-		ioStore.dispatch({
-			type: 'leave',
-			payload: {
-				socket: props.sub,
-				chat: active,
-			},
-		});
-	};
-
-	const onUpdate = () => {
-		chatsStore.subscribe(() => {
-			let newChat = chatsStore.getState();
-			if (newChat) setChats([...chats, newChat]);
-		});
 	};
 
 	useEffect(() => {
-		onUpdate();
+		const abortController = new AbortController();
+		fetchChats(abortController.signal);
 
-		if (props.sub !== undefined) {
-			const abortController = new AbortController();
-			fetchChats(abortController.signal);
-			return () => abortController.abort();
-		}
+		return () => abortController.abort();
 	}, [props.sub]);
 
 	return (
 		<div>
+			<button onClick={submit}>New Chat</button>
+
 			{chats.map((chat: IChat) => (
 				<Chat key={chat._id}>
 					<AvatarGroupComponent
@@ -88,9 +74,13 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 					/>
 
 					{active !== null && active === chat._id ? (
-						<button onClick={() => leave(chat)}>Leave Chat</button>
+						<button onClick={() => leave(chat._id)}>
+							Leave Chat
+						</button>
 					) : (
-						<button onClick={() => enter(chat)}>Join Chat</button>
+						<button onClick={() => join(chat._id)}>
+							Join Chat
+						</button>
 					)}
 				</Chat>
 			))}
