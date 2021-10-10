@@ -57,7 +57,9 @@ const Loader = styled.div`
 	}
 `;
 
-export default function LoadingComponent(props: any): JSX.Element {
+export default function LoadingComponent(props: {
+	reason: string | undefined;
+}): JSX.Element {
 	return (
 		<Container>
 			<Loader>

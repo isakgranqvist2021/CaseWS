@@ -3,13 +3,16 @@
 import { Request, Response } from 'express';
 import chat from '../models/chat';
 
-export default async function create_chat(req: Request, res: Response) {
+export default async function find_chats(req: Request, res: Response) {
 	try {
-		const newChat: any = await chat.create(req.body);
+		console.log(req.params.id);
+		const chats = await chat.findMany({
+			'participants.sub': req.params.id,
+		});
 		return res.json({
-			message: 'chat has been created',
+			message: '',
 			success: true,
-			data: newChat,
+			data: chats,
 		});
 	} catch (err) {
 		return res.json({

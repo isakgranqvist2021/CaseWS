@@ -18,6 +18,7 @@ export default function ChatComponent(): JSX.Element {
 		<Chat>
 			{new Array(250).fill(0).map((msg: any, i: number) => (
 				<MessageComponent
+					key={i}
 					message={'message ' + i}
 					nickname={'Isak'}
 					date={new Date().toLocaleString()}

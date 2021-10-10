@@ -9,7 +9,7 @@ import path from 'path';
 
 dotenv.config({
 	path: path.resolve('./src/.env'), // remove this line in production
-	debug: true,
+	debug: true, // remove this line in production
 });
 connect();
 

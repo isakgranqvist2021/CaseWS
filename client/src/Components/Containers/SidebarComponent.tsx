@@ -2,18 +2,9 @@
 
 import { useAuth0 } from '@auth0/auth0-react';
 import SidebarHeaderComponent from 'Components/Display/SidebarHeaderComponent';
+import ChatsComponent from 'Components/Display/ChatsComponent';
 
 import styled from 'styled-components';
-
-interface Props {
-	email?: string;
-	email_verified?: boolean;
-	name?: string;
-	nickname?: string;
-	picture?: string;
-	sub?: string;
-	updated_at?: Date | string;
-}
 
 const Aside = styled.aside`
 	display: flex;
@@ -36,7 +27,6 @@ const Body = styled.div`
 
 const Content = styled.div`
 	flex-grow: 1;
-	padding: 50px 0;
 	background-color: rgb(243, 243, 243);
 	width: 100%;
 `;
@@ -52,7 +42,7 @@ const Footer = styled.footer`
 	}
 `;
 
-export default function SidebarComponent(props: Props): JSX.Element {
+export default function SidebarComponent(props: IUser): JSX.Element {
 	const { logout } = useAuth0();
 
 	return (
@@ -60,7 +50,7 @@ export default function SidebarComponent(props: Props): JSX.Element {
 			<Body>
 				<SidebarHeaderComponent {...props} />
 				<Content>
-					<p>qwt</p>
+					<ChatsComponent sub={props.sub} />
 				</Content>
 				<Footer>
 					<button

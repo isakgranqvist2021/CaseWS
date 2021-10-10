@@ -27,17 +27,7 @@ const Header = styled.header`
 	}
 `;
 
-interface Props {
-	email?: string;
-	email_verified?: boolean;
-	name?: string;
-	nickname?: string;
-	picture?: string;
-	sub?: string;
-	updated_at?: Date | string;
-}
-
-export default function SidebarHeaderComponent(props: Props): JSX.Element {
+export default function SidebarHeaderComponent(props: IUser): JSX.Element {
 	const submit = async () => {
 		const abortController = new AbortController();
 

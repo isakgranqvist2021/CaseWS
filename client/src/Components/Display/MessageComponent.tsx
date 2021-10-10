@@ -15,13 +15,11 @@ const Header = styled.header`
 	margin-bottom: 10px;
 `;
 
-interface Props {
+export default function MessageComponent(props: {
 	message: string;
 	nickname: string;
 	date: Date | string;
-}
-
-export default function MessageComponent(props: Props): JSX.Element {
+}): JSX.Element {
 	return (
 		<Message>
 			<Header>
