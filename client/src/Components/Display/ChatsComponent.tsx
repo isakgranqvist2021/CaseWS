@@ -13,9 +13,15 @@ const Chat = styled.div`
 	padding: 10px;
 
 	button {
-		font-size: 12px;
-		padding: 5px;
+		width: 100px;
 	}
+`;
+
+const Button = styled.button`
+	width: 90%;
+	padding: 5px;
+	display: block;
+	margin: 10px auto;
 `;
 
 export default function ChatsComponent(props: IUser): JSX.Element {
@@ -92,7 +98,7 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 
 	return (
 		<div>
-			<button onClick={submit}>New Chat</button>
+			<Button onClick={submit}>New Chat</Button>
 
 			{chats.map((chat: IChat) => (
 				<Chat key={chat._id}>
