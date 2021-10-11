@@ -10,6 +10,7 @@ interface IUser {
 	picture?: string;
 	sub?: string;
 	updated_at?: Date | string;
+	role?: 'admin' | 'participant';
 }
 
 interface IMessage {

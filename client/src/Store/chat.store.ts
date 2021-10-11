@@ -1,6 +1,5 @@
 /** @format */
 
-import { type } from 'os';
 import { createStore } from 'redux';
 
 interface Payload {

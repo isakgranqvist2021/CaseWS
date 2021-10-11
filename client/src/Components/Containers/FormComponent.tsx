@@ -1,16 +1,16 @@
 /** @format */
 
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const Form = styled.div`
 	background-color: #333;
 	display: flex;
+	padding: 10px;
 
 	button,
 	input {
-		padding: 20px;
-		border: none;
+		padding: 10px;
 	}
 
 	input {
@@ -38,9 +38,14 @@ export default function FormComponent(props: {
 		setMessage('');
 	};
 
+	const handleKeyPress = (e: any) => {
+		if (e.key === 'Enter') return send();
+	};
+
 	return (
 		<Form>
 			<input
+				onKeyPress={handleKeyPress}
 				placeholder='Message..'
 				value={message}
 				onChange={(e: any) => setMessage(e.target.value)}

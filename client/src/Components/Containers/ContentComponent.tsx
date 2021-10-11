@@ -89,7 +89,13 @@ export default function ContentComponent(props: IUser) {
 
 	return (
 		<Content>
-			<ChatComponent messages={chat.messages} socket={ws} />
+			<ChatComponent
+				messages={chat.messages}
+				socket={ws}
+				admin={chat.participants.some(
+					(p: IUser) => p.sub === props.sub && p.role === 'admin'
+				)}
+			/>
 			<FormComponent room={chat._id} user={props} socket={ws} />
 		</Content>
 	);

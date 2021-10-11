@@ -1,6 +1,7 @@
 /** @format */
 
 import MessageComponent from 'Components/Display/MessageComponent';
+import ChatHeaderComponent from 'Components/Display/ChatHeaderComponent';
 import styled from 'styled-components';
 
 const Chat = styled.div`
@@ -15,9 +16,11 @@ const Chat = styled.div`
 export default function ChatComponent(props: {
 	messages: IMessage[];
 	socket: WebSocket;
+	admin: boolean;
 }): JSX.Element {
 	return (
 		<Chat>
+			{props.admin && <ChatHeaderComponent />}
 			{props.messages.map((m: any, i: number) => (
 				<MessageComponent
 					key={i}

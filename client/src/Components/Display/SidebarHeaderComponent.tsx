@@ -24,7 +24,7 @@ const Header = styled.header`
 export default function SidebarHeaderComponent(props: IUser): JSX.Element {
 	return (
 		<Header>
-			<img src={props.picture} />
+			<img src={props.picture} alt={props.nickname} />
 			<p>{props.nickname}</p>
 		</Header>
 	);
