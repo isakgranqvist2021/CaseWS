@@ -32,25 +32,38 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 	};
 
 	const action = (action: string, chat: IChat) => {
-		setActive(chat._id);
-
 		if (action === 'leave') {
 			chatStore.dispatch({
 				type: 'leave',
-				payload: chat,
+				payload: {
+					chat: chat,
+					room1: undefined,
+					room2: active,
+				},
 			});
 			return setActive(null);
 		}
 
-		if (active)
+		if (active) {
+			setActive(chat._id);
 			return chatStore.dispatch({
 				type: 'switch',
-				payload: chat,
+				payload: {
+					chat: chat,
+					room1: chat._id,
+					room2: active,
+				},
 			});
+		}
 
+		setActive(chat._id);
 		return chatStore.dispatch({
 			type: 'join',
-			payload: chat,
+			payload: {
+				chat: chat,
+				room1: chat._id,
+				room2: undefined,
+			},
 		});
 	};
 

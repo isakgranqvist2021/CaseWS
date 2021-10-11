@@ -42,23 +42,52 @@ export default function ContentComponent(props: IUser) {
 		);
 	};
 
-	const leave_join = (room: string): void => {
-		console.log(chat);
+	useEffect(() => {
+		ws.onopen = () => {
+			console.log('WebSocket -> OPEN');
+			ws.onmessage = (event: any) => {
+				console.log(event);
 
-		if (chat) leave(chat._id);
-		return join(room);
-	};
+				let data = JSON.parse(event.data);
+				if (chat) {
+					console.log('Append message to chat');
+
+					let newMessage = {
+						message: data.message,
+						createdAt: new Date().toLocaleDateString(),
+						user: {
+							nickname: 'John',
+						},
+					};
+
+					setChat({
+						...chat,
+						messages: [...chat.messages, newMessage],
+					});
+				}
+			};
+		};
+	}, [chat]);
 
 	useEffect(() => {
 		chatStore.subscribe(() => {
 			let ns = chatStore.getState();
 			if (!ns) return;
 
-			if (ns.type === 'join') join(ns.payload._id);
-			if (ns.type === 'leave') leave(ns.payload._id);
-			if (ns.type === 'switch') leave_join(ns.payload._id);
+			switch (ns.type) {
+				case 'join':
+					join(ns.room1);
+					break;
+				case 'leave':
+					leave(ns.room2);
+					break;
+				case 'switch':
+					leave(ns.room2);
+					join(ns.room1);
+					break;
+			}
 
-			return setChat(ns.payload);
+			return setChat(ns.chat);
 		});
 	}, []);
 

@@ -31,7 +31,6 @@ export default function FormComponent(props: {
 			JSON.stringify({
 				type: 'message',
 				room: props.room,
-				socketId: props.socketId,
 				message: message,
 			})
 		);

@@ -18,12 +18,12 @@ export default function ChatComponent(props: {
 }): JSX.Element {
 	return (
 		<Chat>
-			{props.messages.map((msg: any, i: number) => (
+			{props.messages.map((m: any, i: number) => (
 				<MessageComponent
 					key={i}
-					message={msg.message}
-					nickname={msg.nickname}
-					date={msg.createdAt}
+					message={m.message}
+					nickname={m.user.nickname}
+					date={m.createdAt}
 				/>
 			))}
 		</Chat>

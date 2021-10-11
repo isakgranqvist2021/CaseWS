@@ -1,8 +1,7 @@
 /** @format */
 
-import { Server } from 'http';
-import WebSocket, { WebSocketServer } from 'ws';
-
+import { app, server, wss } from './utils/io';
+import WebSocket from 'ws';
 import express from 'express';
 import cors from 'cors';
 import connect from './utils/database';
@@ -16,8 +15,6 @@ dotenv.config({
 connect();
 
 const PORT = process.env.PORT || 8080;
-const app = express();
-const server = new Server(app);
 
 import router from './router';
 import join from './io/join';
@@ -27,10 +24,6 @@ import send from './io/send';
 app.use(express.json());
 app.use(cors());
 app.use('/chat', router);
-
-const wss = new WebSocketServer({
-	server: server,
-});
 
 wss.on('connection', (ws: WebSocket) => {
 	ws.on('message', (e: any, isBinary: boolean) => {

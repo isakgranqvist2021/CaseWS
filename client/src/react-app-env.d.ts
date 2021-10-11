@@ -14,7 +14,6 @@ interface IUser {
 
 interface IMessage {
 	message: string;
-	room: string;
 	createdAt: Date | string;
 	user: IUser;
 }
