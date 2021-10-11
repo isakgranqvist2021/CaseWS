@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { GET, POST } from 'Utils/http';
 import styled from 'styled-components';
 import AvatarGroupComponent from 'Components/Display/AvatarGroupComponent';
+import chatStore from 'Store/chat.store';
 
 const Chat = styled.div`
 	display: flex;
@@ -30,9 +31,28 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 		if (response.success) setChats(response.data);
 	};
 
-	const join = (room: string) => {};
+	const action = (action: string, chat: IChat) => {
+		setActive(chat._id);
 
-	const leave = (room: string) => {};
+		if (action === 'leave') {
+			chatStore.dispatch({
+				type: 'leave',
+				payload: chat,
+			});
+			return setActive(null);
+		}
+
+		if (active)
+			return chatStore.dispatch({
+				type: 'switch',
+				payload: chat,
+			});
+
+		return chatStore.dispatch({
+			type: 'join',
+			payload: chat,
+		});
+	};
 
 	const submit = async () => {
 		const abortController = new AbortController();
@@ -74,11 +94,11 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 					/>
 
 					{active !== null && active === chat._id ? (
-						<button onClick={() => leave(chat._id)}>
+						<button onClick={() => action('leave', chat)}>
 							Leave Chat
 						</button>
 					) : (
-						<button onClick={() => join(chat._id)}>
+						<button onClick={() => action('join', chat)}>
 							Join Chat
 						</button>
 					)}

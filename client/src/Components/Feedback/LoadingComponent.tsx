@@ -58,13 +58,16 @@ const Loader = styled.div`
 
 export default function LoadingComponent(props: {
 	reason: string | undefined;
+	loader: boolean;
 }): JSX.Element {
 	return (
 		<Container>
-			<Loader>
-				<div></div>
-				<div></div>
-			</Loader>
+			{props.loader && (
+				<Loader>
+					<div></div>
+					<div></div>
+				</Loader>
+			)}
 			<p>{props.reason ? props.reason : 'Loading...'}</p>
 		</Container>
 	);

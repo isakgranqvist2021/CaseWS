@@ -4,7 +4,7 @@ import MessageComponent from 'Components/Display/MessageComponent';
 import styled from 'styled-components';
 
 const Chat = styled.div`
-	background-color: rgb(100, 100, 100);
+	background-color: rgb(255, 255, 255);
 	flex-grow: 1;
 	width: 100%;
 	overflow: auto;
@@ -12,7 +12,10 @@ const Chat = styled.div`
 	flex-direction: column;
 `;
 
-export default function ChatComponent(props: IChat): JSX.Element {
+export default function ChatComponent(props: {
+	messages: IMessage[];
+	socket: WebSocket;
+}): JSX.Element {
 	return (
 		<Chat>
 			{props.messages.map((msg: any, i: number) => (

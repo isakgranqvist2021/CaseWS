@@ -22,6 +22,7 @@ export default function RouterComponent(): JSX.Element {
 		}
 	}, [isLoading, error]);
 
-	if (loading) return <LoadingComponent reason='auth0 loading' />;
+	if (loading)
+		return <LoadingComponent reason='auth0 loading' loader={true} />;
 	return !isAuthenticated ? <AuthComponent /> : <AppComponent />;
 }

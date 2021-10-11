@@ -18,16 +18,23 @@ const Form = styled.div`
 	}
 `;
 
-interface Props extends IUser {
-	send(message: string): void;
-}
-
-export default function FormComponent(props: Props): JSX.Element {
+export default function FormComponent(props: {
+	room: string;
+	socketId: string | undefined;
+	socket: WebSocket;
+}): JSX.Element {
 	const [message, setMessage] = useState<string>('');
 
 	const send = (): void => {
 		if (!message) return;
-		props.send(message);
+		props.socket.send(
+			JSON.stringify({
+				type: 'message',
+				room: props.room,
+				socketId: props.socketId,
+				message: message,
+			})
+		);
 		setMessage('');
 	};
 

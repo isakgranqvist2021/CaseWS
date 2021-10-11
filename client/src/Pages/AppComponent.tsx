@@ -15,7 +15,12 @@ export default function AppComponent(): JSX.Element {
 	const { user, isLoading } = useAuth0();
 
 	if (isLoading) {
-		return <LoadingComponent reason='Loading user information..' />;
+		return (
+			<LoadingComponent
+				reason='Loading user information..'
+				loader={true}
+			/>
+		);
 	}
 
 	return (

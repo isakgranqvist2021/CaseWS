@@ -8,6 +8,7 @@ import FormComponent from 'Components/Containers/FormComponent';
 import ChatComponent from 'Components/Containers/ChatComponent';
 import LoadingComponent from 'Components/Feedback/LoadingComponent';
 import settings from 'Utils/settings';
+import chatStore from 'Store/chat.store';
 
 const Content = styled.div`
 	display: flex;
@@ -18,25 +19,56 @@ const Content = styled.div`
 `;
 
 export default function ContentComponent(props: IUser) {
-	let ws: WebSocket = new WebSocket(settings.ws);
-	const [chat, setChat] = useState<IChat | null>();
+	const ws: WebSocket = new WebSocket(settings.ws);
+	const [chat, setChat] = useState<IChat | null>(null);
 
-	const addMessage = (data: any) => {};
+	const join = (room: string): void => {
+		return ws.send(
+			JSON.stringify({
+				type: 'join',
+				room: room,
+				socketId: props.sub,
+			})
+		);
+	};
 
-	const send = (message: string) => {};
+	const leave = (room: string): void => {
+		return ws.send(
+			JSON.stringify({
+				type: 'leave',
+				room: room,
+				socketId: props.sub,
+			})
+		);
+	};
+
+	const leave_join = (room: string): void => {
+		console.log(chat);
+
+		if (chat) leave(chat._id);
+		return join(room);
+	};
 
 	useEffect(() => {
-		ws.onopen = () => {};
+		chatStore.subscribe(() => {
+			let ns = chatStore.getState();
+			if (!ns) return;
 
-		return () => ws.close();
+			if (ns.type === 'join') join(ns.payload._id);
+			if (ns.type === 'leave') leave(ns.payload._id);
+			if (ns.type === 'switch') leave_join(ns.payload._id);
+
+			return setChat(ns.payload);
+		});
 	}, []);
 
-	if (!chat) return <LoadingComponent reason='Please join a chat' />;
+	if (!chat)
+		return <LoadingComponent reason='Please join a chat' loader={false} />;
 
 	return (
 		<Content>
-			<ChatComponent {...chat} />
-			<FormComponent {...props} send={send} />
+			<ChatComponent messages={chat.messages} socket={ws} />
+			<FormComponent room={chat._id} socketId={props.sub} socket={ws} />
 		</Content>
 	);
 }
