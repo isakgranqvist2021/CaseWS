@@ -20,7 +20,7 @@ const Form = styled.div`
 
 export default function FormComponent(props: {
 	room: string;
-	socketId: string | undefined;
+	user: IUser;
 	socket: WebSocket;
 }): JSX.Element {
 	const [message, setMessage] = useState<string>('');
@@ -32,6 +32,7 @@ export default function FormComponent(props: {
 				type: 'message',
 				room: props.room,
 				message: message,
+				user: props.user,
 			})
 		);
 		setMessage('');

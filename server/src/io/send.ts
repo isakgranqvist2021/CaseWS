@@ -1,5 +1,6 @@
 /** @format */
 
+import { formatDistance } from 'date-fns';
 import { rooms, IRoom } from './rooms';
 import WebSocket from 'ws';
 
@@ -13,10 +14,18 @@ function broadcast(clients: WebSocket[], payload: any, b?: boolean) {
 
 export default function send(ws: WebSocket, event: any, b?: boolean) {
 	let room = rooms.find((room: IRoom) => room.id === event.room);
+	if (!room) return;
 
 	let clients = room.sockets.map((s: { socket: WebSocket; id: string }) => {
 		return s.socket;
 	});
 
-	broadcast(clients, JSON.stringify({ message: event.message }));
+	broadcast(
+		clients,
+		JSON.stringify({
+			message: event.message,
+			createdAt: new Date(),
+			user: event.user,
+		})
+	);
 }

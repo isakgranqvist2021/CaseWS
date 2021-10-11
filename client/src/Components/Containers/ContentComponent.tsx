@@ -1,7 +1,6 @@
 /** @format */
 
 import { useState, useEffect } from 'react';
-
 import styled from 'styled-components';
 
 import FormComponent from 'Components/Containers/FormComponent';
@@ -21,6 +20,7 @@ const Content = styled.div`
 export default function ContentComponent(props: IUser) {
 	const ws: WebSocket = new WebSocket(settings.ws);
 	const [chat, setChat] = useState<IChat | null>(null);
+	const [message, setMessage] = useState<any>();
 
 	const join = (room: string): void => {
 		return ws.send(
@@ -43,31 +43,24 @@ export default function ContentComponent(props: IUser) {
 	};
 
 	useEffect(() => {
+		if (!chat) return;
+
+		setChat({
+			...chat,
+			messages: [...chat.messages, message],
+		});
+	}, [message]);
+
+	useEffect(() => {
 		ws.onopen = () => {
 			console.log('WebSocket -> OPEN');
-			ws.onmessage = (event: any) => {
-				console.log(event);
-
-				let data = JSON.parse(event.data);
-				if (chat) {
-					console.log('Append message to chat');
-
-					let newMessage = {
-						message: data.message,
-						createdAt: new Date().toLocaleDateString(),
-						user: {
-							nickname: 'John',
-						},
-					};
-
-					setChat({
-						...chat,
-						messages: [...chat.messages, newMessage],
-					});
-				}
-			};
 		};
-	}, [chat]);
+
+		ws.onmessage = (event: any) => {
+			let data = JSON.parse(event.data);
+			setMessage(data);
+		};
+	}, []);
 
 	useEffect(() => {
 		chatStore.subscribe(() => {
@@ -97,7 +90,7 @@ export default function ContentComponent(props: IUser) {
 	return (
 		<Content>
 			<ChatComponent messages={chat.messages} socket={ws} />
-			<FormComponent room={chat._id} socketId={props.sub} socket={ws} />
+			<FormComponent room={chat._id} user={props} socket={ws} />
 		</Content>
 	);
 }

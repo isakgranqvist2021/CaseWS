@@ -1,15 +1,16 @@
 /** @format */
 
+import { formatDistance } from 'date-fns';
 import styled from 'styled-components';
 
 const Message = styled.div`
-	color: #fff;
+	color: #000000;
 	padding: 10px;
 `;
 
 const Header = styled.header`
 	display: flex;
-	color: #bdbdbd;
+	color: #535353;
 	font-size: 13px;
 	gap: 10px;
 	margin-bottom: 10px;
@@ -20,10 +21,15 @@ export default function MessageComponent(props: {
 	nickname: string;
 	date: Date | string;
 }): JSX.Element {
+	let date = props.date;
+	if (typeof date === 'string') {
+		date = new Date(props.date);
+	}
+
 	return (
 		<Message>
 			<Header>
-				<p>{props.date}</p>
+				<p>{formatDistance(date, new Date(), { addSuffix: true })}</p>
 				<p>{props.nickname}</p>
 			</Header>
 			<p>{props.message}</p>
