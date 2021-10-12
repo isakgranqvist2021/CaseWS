@@ -1,7 +1,7 @@
 /** @format */
 
-import MessageComponent from 'Components/Display/MessageComponent';
-import ChatHeaderComponent from 'Components/Display/ChatHeaderComponent';
+import MessageComponent from 'Components/Chat/MessageComponent';
+import ChatHeaderComponent from 'Components/Chat/ChatHeaderComponent';
 import styled from 'styled-components';
 
 const Chat = styled.div`

@@ -1,6 +1,6 @@
 /** @format */
 
-import RouterComponent from '../Navigation/RouterComponent';
+import RouterComponent from '../Utils/RouterComponent';
 import settings from 'Utils/settings';
 import { Auth0Provider } from '@auth0/auth0-react';
 

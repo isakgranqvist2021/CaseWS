@@ -11,13 +11,15 @@ import participantsStore from 'Store/participants.store';
 const Header = styled.header`
 	background-color: #7e2d97;
 	padding: 10px;
-	position: relative;
+	display: flex;
+	justify-content: space-between;
 `;
 
 const Form = styled.div`
-	width: 100%;
+	width: 50%;
 	display: flex;
 	align-items: center;
+	position: relative;
 `;
 
 const Results = styled.div`
@@ -133,32 +135,32 @@ export default function ChatHeaderComponent(props: {
 					<Button onClick={search} small>
 						Search
 					</Button>
-				</Form>
-			)}
 
-			{open && props.admin && (
-				<Results>
-					<List>
-						{results.map((r: any, i: number) => (
-							<ListItem key={i} onClick={() => add(r)}>
-								<AvatarItem>
-									{!ints.includes(i) ? (
-										<img
-											src={r.picture}
-											alt={r.nickname}
-											onError={(e: any) =>
-												setInts([...ints, i])
-											}
-										/>
-									) : (
-										<span>{r.nickname[0]}</span>
-									)}
-								</AvatarItem>
-								<p>{r.nickname}</p>
-							</ListItem>
-						))}
-					</List>
-				</Results>
+					{open && (
+						<Results>
+							<List>
+								{results.map((r: any, i: number) => (
+									<ListItem key={i} onClick={() => add(r)}>
+										<AvatarItem>
+											{!ints.includes(i) ? (
+												<img
+													src={r.picture}
+													alt={r.nickname}
+													onError={(e: any) =>
+														setInts([...ints, i])
+													}
+												/>
+											) : (
+												<span>{r.nickname[0]}</span>
+											)}
+										</AvatarItem>
+										<p>{r.nickname}</p>
+									</ListItem>
+								))}
+							</List>
+						</Results>
+					)}
+				</Form>
 			)}
 		</Header>
 	);

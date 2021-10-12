@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { GET } from 'Utils/http';
 import chatStore from 'Store/chat.store';
 import participantsStore from 'Store/participants.store';
-import SidebarChatComponent from './SidebarChatComponent';
+import SidebarChatComponent from '../Sidebar/SidebarChatComponent';
 
 export default function ChatsComponent(props: {
 	user: IUser;

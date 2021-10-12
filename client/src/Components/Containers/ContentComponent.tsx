@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import FormComponent from 'Components/Containers/FormComponent';
-import ChatComponent from 'Components/Containers/ChatComponent';
+import FormComponent from 'Components/Chat/FormComponent';
+import ChatComponent from 'Components/Chat/ChatComponent';
 import LoadingComponent from 'Components/Feedback/LoadingComponent';
 import settings from 'Utils/settings';
 import chatStore from 'Store/chat.store';

@@ -3,8 +3,8 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { Button } from 'Styles/styles';
 import { POST } from 'Utils/http';
-import SidebarHeaderComponent from 'Components/Display/SidebarHeaderComponent';
-import ChatsComponent from 'Components/Display/ChatsComponent';
+import SidebarHeaderComponent from 'Components/Sidebar/SidebarHeaderComponent';
+import ChatsComponent from 'Components/Chat/ChatsComponent';
 
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';

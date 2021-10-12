@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 import styled from 'styled-components';
 import LoadingComponent from 'Components/Feedback/LoadingComponent';
-import SidebarComponent from 'Components/Containers/SidebarComponent';
+import SidebarComponent from 'Components/Sidebar/SidebarComponent';
 import ContentComponent from 'Components/Containers/ContentComponent';
 
 const App = styled.div`
