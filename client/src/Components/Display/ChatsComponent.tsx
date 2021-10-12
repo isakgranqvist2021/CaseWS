@@ -12,6 +12,10 @@ export default function ChatsComponent(props: {
 }): JSX.Element {
 	const [chats, setChats] = useState<IChat[]>([]);
 	const [active, setActive] = useState<string | null>(null);
+	const [np, setNp] = useState<{
+		user: IUser;
+		room: string;
+	} | null>(null);
 
 	const fetchChats = async (signal: AbortSignal) => {
 		const response = await GET({
@@ -79,21 +83,22 @@ export default function ChatsComponent(props: {
 	};
 
 	useEffect(() => {
+		if (!np) return;
+		let update = chats;
+		let room = update.find((c: IChat) => c._id === np?.room);
+		if (!room) return;
+		room.participants.push(np.user);
+		setChats([...update]);
+	}, [np]);
+
+	useEffect(() => {
 		const abortController = new AbortController();
 		fetchChats(abortController.signal);
 
 		participantsStore.subscribe(() => {
-			console.log(chats);
-
 			let ns = participantsStore.getState();
 			if (!ns) return;
-			let update = chats;
-
-			let room = update.find((c: IChat) => c._id === ns?.room);
-			if (!room) return;
-			room.participants.push(ns.user);
-
-			setChats([...update]);
+			setNp(ns);
 		});
 
 		return () => abortController.abort();
