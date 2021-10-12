@@ -52,9 +52,22 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 		return Promise.resolve();
 	};
 
+	const fetchChat = async (signal: AbortSignal, id: string) => {
+		const response = await GET({
+			path: '/chat/find/' + id,
+			signal: signal,
+		});
+
+		if (response.success) {
+			let c = chats;
+			c[c.findIndex((value: IChat) => value._id === id)] = response.data;
+			setChats([...c]);
+		}
+	};
+
 	const action = async (action: string, chat: IChat) => {
 		const abortController = new AbortController();
-		fetchChats(abortController.signal);
+		await fetchChat(abortController.signal, chat._id);
 
 		if (action === 'leave') {
 			chatStore.dispatch({
