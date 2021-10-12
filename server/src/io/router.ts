@@ -8,15 +8,15 @@ import send from '../io/send';
 
 export default function io(ws: WebSocket) {
 	ws.on('message', (e: any, isBinary: boolean) => {
-		const event: any = JSON.parse(e);
+		const payload: any = JSON.parse(e);
 
-		switch (event.type) {
+		switch (payload.type) {
 			case 'join':
-				return join(ws, event, isBinary);
+				return join(ws, payload, isBinary);
 			case 'message':
-				return send(ws, event, isBinary);
+				return send(ws, payload, isBinary);
 			case 'leave':
-				return leave(ws, event, isBinary);
+				return leave(ws, payload, isBinary);
 			default:
 				return;
 		}
