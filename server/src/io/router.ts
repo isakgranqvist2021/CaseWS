@@ -1,7 +1,6 @@
 /** @format */
 
 import WebSocket from 'ws';
-
 import join from '../io/join';
 import leave from '../io/leave';
 import send from '../io/send';

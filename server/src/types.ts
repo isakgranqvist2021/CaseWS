@@ -1,18 +1,20 @@
 /** @format */
 
-interface IRoom {
+import WebSocket from 'ws';
+
+export interface IRoom {
 	id: string;
 	sockets: ISocket[];
 }
 
-interface IMessage {
+export interface IMessage {
 	message: string;
 	createdAt: Date | string;
 	user: any;
 	type: 'message' | 'event';
 }
 
-interface ISocket {
-	socket: import('ws').WebSocket;
+export interface ISocket {
+	socket: WebSocket;
 	id: string;
 }
