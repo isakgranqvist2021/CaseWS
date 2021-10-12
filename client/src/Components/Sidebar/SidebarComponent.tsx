@@ -37,8 +37,6 @@ const Content = styled.div`
 const Footer = styled.footer`
 	width: 100%;
 	display: flex;
-	gap: 10px;
-	padding: 0 10px;
 `;
 
 export default function SidebarComponent(props: IUser): JSX.Element {

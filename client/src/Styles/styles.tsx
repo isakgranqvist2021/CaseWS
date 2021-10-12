@@ -37,18 +37,31 @@ export const AvatarItem = styled.div`
 	}
 `;
 
-export const Button = styled('button')<{ small?: boolean }>`
-	padding: 13px;
-	display: block;
-	margin: 10px auto;
-	border-radius: 5px;
-	border: none;
-	background-color: #ffffff;
-	cursor: pointer;
+export const Button = styled('button')<{ small?: boolean; fontSize?: string }>`
 	width: ${(props) => (props.small ? 'auto' : '90%')};
-	border: none;
+
+	height: 100%;
+	padding: 13px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	background-color: #faf7f0;
 	color: #7e2d97;
-	min-width: 100px;
+
+	cursor: pointer;
+	border: none;
+
+	transition: all 300ms ease;
+
+	span {
+		font-size: inherit;
+	}
+
+	&:hover {
+		background-color: #e9e6e0;
+	}
 `;
 
 export const Input = styled.input`
@@ -56,6 +69,6 @@ export const Input = styled.input`
 	padding: 13px;
 	border: none;
 	background-color: #faf7f0;
-	margin-right: 10px;
-	border-radius: 5px;
+	outline: none;
+	border-right: 1px solid #7e2d97;
 `;

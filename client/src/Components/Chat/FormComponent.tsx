@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { Input, Button } from 'Styles/styles';
 import styled from 'styled-components';
+import IconComponent from 'Components/Utils/IconComponent';
 
 const Form = styled.div`
 	background-color: #7e2d97;
 	display: flex;
 	align-items: center;
-	padding: 10px;
 `;
 
 export default function FormComponent(props: {
@@ -44,7 +44,7 @@ export default function FormComponent(props: {
 				onChange={(e: any) => setMessage(e.target.value)}
 			/>
 			<Button onClick={send} small={true}>
-				Send
+				<IconComponent icon='send' />
 			</Button>
 		</Form>
 	);
