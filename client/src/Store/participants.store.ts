@@ -8,10 +8,6 @@ interface State {
 }
 
 export default createStore((state: State | null = null, action: IAction) => {
-	switch (action.type) {
-		case 'add':
-			return (state = action.payload);
-		default:
-			return state;
-	}
+	if (action.type === 'add') return (state = action.payload);
+	return state;
 });

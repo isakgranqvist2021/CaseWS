@@ -62,6 +62,7 @@ export default function ChatHeaderComponent(props: {
 	const [value, setValue] = useState<string>('');
 	const [results, setResults] = useState<any[]>([]);
 	const [open, setOpen] = useState<boolean>(false);
+	const [ints, setInts] = useState<any>([]);
 
 	const search = async (): Promise<any> => {
 		if (!value) return;
@@ -128,7 +129,17 @@ export default function ChatHeaderComponent(props: {
 						{results.map((r: any, i: number) => (
 							<ListItem key={i} onClick={() => add(r)}>
 								<AvatarItem>
-									<img src={r.picture} alt={r.nickname} />
+									{!ints.includes(i) ? (
+										<img
+											src={r.picture}
+											alt={r.nickname}
+											onError={(e: any) =>
+												setInts([...ints, i])
+											}
+										/>
+									) : (
+										<span>{r.nickname[0]}</span>
+									)}
 								</AvatarItem>
 								<p>{r.nickname}</p>
 							</ListItem>

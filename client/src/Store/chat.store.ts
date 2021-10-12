@@ -9,15 +9,16 @@ interface State {
 	room2: string;
 }
 
+const mutations = ['join', 'leave', 'switch'];
+
 export default createStore((state: State | null = null, action: IAction) => {
-	switch (action.type) {
-		case 'join':
-			return (state = { type: action.type, ...action.payload });
-		case 'leave':
-			return (state = { type: action.type, ...action.payload });
-		case 'switch':
-			return (state = { type: action.type, ...action.payload });
-		default:
-			return state;
-	}
+	const mutate = mutations.includes(action.type);
+
+	if (mutate)
+		return (state = {
+			type: action.type,
+			...action.payload,
+		});
+
+	return state;
 });

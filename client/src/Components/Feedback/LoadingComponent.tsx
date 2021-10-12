@@ -6,7 +6,7 @@ const Container = styled.div`
 	width: 100vw;
 	height: 100vh;
 	inset: 0;
-	background-color: #3333336e;
+	background-color: #ffffff;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -16,7 +16,7 @@ const Container = styled.div`
 		margin-top: 20px;
 		font-weight: 900;
 		font-size: 2rem;
-		color: #ffffff;
+		color: #000000;
 	}
 `;
 

@@ -12,10 +12,6 @@ const Chat = styled.div`
 	justify-content: space-between;
 	border-bottom: 1px solid lightgray;
 	padding: 10px;
-
-	button {
-		width: 100px;
-	}
 `;
 
 const Button = styled.button`
@@ -23,6 +19,23 @@ const Button = styled.button`
 	padding: 5px;
 	display: block;
 	margin: 10px auto;
+`;
+
+const Action = styled.button`
+	color: #fff;
+	border: none;
+	cursor: pointer;
+	width: 75px;
+	text-align: center;
+	border-radius: 5px;
+
+	&.leave {
+		background-color: #bb576b;
+	}
+
+	&.join {
+		background-color: #3ab362;
+	}
 `;
 
 export default function ChatsComponent(props: IUser): JSX.Element {
@@ -99,6 +112,8 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 		fetchChats(abortController.signal);
 
 		participantsStore.subscribe(() => {
+			console.log(chats);
+
 			let ns = participantsStore.getState();
 			if (!ns) return;
 			let update = chats;
@@ -130,13 +145,17 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 					/>
 
 					{active !== null && active === chat._id ? (
-						<button onClick={() => action('leave', chat)}>
-							Leave Chat
-						</button>
+						<Action
+							className='leave'
+							onClick={() => action('leave', chat)}>
+							Leave
+						</Action>
 					) : (
-						<button onClick={() => action('join', chat)}>
-							Join Chat
-						</button>
+						<Action
+							className='join'
+							onClick={() => action('join', chat)}>
+							Join
+						</Action>
 					)}
 				</Chat>
 			))}

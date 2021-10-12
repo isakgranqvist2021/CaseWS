@@ -3,7 +3,6 @@
 import styled from 'styled-components';
 
 export const AvatarItem = styled.div`
-	position: relative;
 	display: flex;
 	-webkit-box-align: center;
 	align-items: center;
@@ -14,16 +13,15 @@ export const AvatarItem = styled.div`
 	height: 30px;
 	font-family: Roboto, Helvetica, Arial, sans-serif;
 	font-size: 1.25rem;
-	line-height: 1;
 	border-radius: 50%;
 	overflow: hidden;
 	user-select: none;
-	color: rgb(18, 18, 18);
-	background-color: rgb(231, 231, 231);
+	color: rgb(255, 255, 255);
+	background-color: rgb(138, 6, 46);
 	box-sizing: content-box;
 	border: 2px solid rgb(233, 233, 233);
-	box-sizing: content-box;
-	font-size: 12px;
+	font-size: 14px;
+	text-transform: uppercase;
 
 	&:not(:first-of-type) {
 		margin-left: -8px;

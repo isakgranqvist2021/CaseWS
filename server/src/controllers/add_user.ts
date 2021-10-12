@@ -5,7 +5,6 @@ import chat from '../models/chat';
 
 export default async function add_user(req: Request, res: Response) {
 	try {
-		console.log(req.body);
 		const c = await chat.findOne({ _id: req.body.room });
 
 		if (!c)
