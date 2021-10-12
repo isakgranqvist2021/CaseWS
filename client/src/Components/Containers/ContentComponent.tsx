@@ -49,6 +49,7 @@ export default function ContentComponent(props: IUser) {
 			JSON.stringify({
 				type: 'join',
 				room: room,
+				user: props,
 				socketId: props.sub,
 			})
 		);
@@ -59,12 +60,17 @@ export default function ContentComponent(props: IUser) {
 			JSON.stringify({
 				type: 'leave',
 				room: room,
+				user: props,
 				socketId: props.sub,
 			})
 		);
 	};
 
-	useEffect(() => setChat(null), [mutate]);
+	useEffect(() => {
+		if (mutate.length === 0) return;
+		setChat(null);
+		setMutate('');
+	}, [mutate]);
 
 	useEffect(() => {
 		if (!chat) return;

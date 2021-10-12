@@ -7,7 +7,7 @@ import SidebarHeaderComponent from 'Components/Display/SidebarHeaderComponent';
 import ChatsComponent from 'Components/Display/ChatsComponent';
 
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Aside = styled.aside`
 	display: flex;

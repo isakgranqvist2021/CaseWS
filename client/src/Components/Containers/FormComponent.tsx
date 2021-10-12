@@ -24,8 +24,8 @@ export default function FormComponent(props: {
 			JSON.stringify({
 				type: 'message',
 				room: props.room,
-				message: message,
 				user: props.user,
+				message: message,
 			})
 		);
 		setMessage('');

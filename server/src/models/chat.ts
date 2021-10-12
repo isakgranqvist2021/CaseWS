@@ -46,6 +46,7 @@ const updateOne = async (filter: any, update: any): Promise<any> => {
 	try {
 		return await ChatModel.updateOne(filter, update);
 	} catch (err) {
+		console.log(err);
 		return Promise.reject(err);
 	}
 };
