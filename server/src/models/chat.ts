@@ -42,8 +42,17 @@ const findOne = async (filter: any): Promise<any> => {
 	}
 };
 
+const updateOne = async (filter: any, update: any): Promise<any> => {
+	try {
+		return await ChatModel.updateOne(filter, update);
+	} catch (err) {
+		return Promise.reject(err);
+	}
+};
+
 export default {
 	create,
 	findOne,
 	findMany,
+	updateOne,
 };

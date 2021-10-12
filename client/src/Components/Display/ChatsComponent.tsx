@@ -5,6 +5,7 @@ import { GET, POST } from 'Utils/http';
 import styled from 'styled-components';
 import AvatarGroupComponent from 'Components/Display/AvatarGroupComponent';
 import chatStore from 'Store/chat.store';
+import participantsStore from 'Store/participants.store';
 
 const Chat = styled.div`
 	display: flex;
@@ -35,9 +36,13 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 		});
 
 		if (response.success) setChats(response.data);
+		return Promise.resolve();
 	};
 
-	const action = (action: string, chat: IChat) => {
+	const action = async (action: string, chat: IChat) => {
+		const abortController = new AbortController();
+		await fetchChats(abortController.signal);
+
 		if (action === 'leave') {
 			chatStore.dispatch({
 				type: 'leave',
@@ -92,6 +97,18 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 	useEffect(() => {
 		const abortController = new AbortController();
 		fetchChats(abortController.signal);
+
+		participantsStore.subscribe(() => {
+			let ns = participantsStore.getState();
+			if (!ns) return;
+			let update = chats;
+
+			let room = update.find((c: IChat) => c._id === ns?.room);
+			if (!room) return;
+			room.participants.push(ns.user);
+
+			setChats([...update]);
+		});
 
 		return () => abortController.abort();
 	}, [props.sub]);

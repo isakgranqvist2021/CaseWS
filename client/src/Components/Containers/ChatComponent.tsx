@@ -17,10 +17,11 @@ export default function ChatComponent(props: {
 	messages: IMessage[];
 	socket: WebSocket;
 	admin: boolean;
+	room: string;
 }): JSX.Element {
 	return (
 		<Chat>
-			{props.admin && <ChatHeaderComponent />}
+			{props.admin && <ChatHeaderComponent room={props.room} />}
 			{props.messages.map((m: any, i: number) => (
 				<MessageComponent
 					key={i}

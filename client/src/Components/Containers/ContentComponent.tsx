@@ -18,7 +18,7 @@ const Content = styled.div`
 `;
 
 export default function ContentComponent(props: IUser) {
-	const ws: WebSocket = new WebSocket(settings.ws);
+	let ws: WebSocket = new WebSocket(settings.ws);
 	const [chat, setChat] = useState<IChat | null>(null);
 	const [message, setMessage] = useState<any>();
 
@@ -56,6 +56,10 @@ export default function ContentComponent(props: IUser) {
 			console.log('WebSocket -> OPEN');
 		};
 
+		ws.onclose = () => {
+			ws = new WebSocket(settings.ws);
+		};
+
 		ws.onmessage = (event: any) => {
 			let data = JSON.parse(event.data);
 			setMessage(data);
@@ -84,19 +88,19 @@ export default function ContentComponent(props: IUser) {
 		});
 	}, []);
 
-	if (!chat)
-		return <LoadingComponent reason='Please join a chat' loader={false} />;
-
-	return (
+	return chat !== null ? (
 		<Content>
 			<ChatComponent
 				messages={chat.messages}
 				socket={ws}
+				room={chat._id}
 				admin={chat.participants.some(
 					(p: IUser) => p.sub === props.sub && p.role === 'admin'
 				)}
 			/>
 			<FormComponent room={chat._id} user={props} socket={ws} />
 		</Content>
+	) : (
+		<LoadingComponent reason='Please join a chat' loader={false} />
 	);
 }

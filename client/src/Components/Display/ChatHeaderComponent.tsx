@@ -5,6 +5,7 @@ import { POST } from 'Utils/http';
 import { AvatarItem } from 'Styles/styles';
 import styled from 'styled-components';
 import chatStore from 'Store/chat.store';
+import participantsStore from 'Store/participants.store';
 
 const Header = styled.header`
 	background-color: #333;
@@ -32,6 +33,8 @@ const Results = styled.div`
 	left: 0;
 	width: 100%;
 	background-color: #707070;
+	height: 400px;
+	overflow: auto;
 `;
 
 const List = styled.ul`
@@ -53,9 +56,12 @@ const ListItem = styled.li`
 	}
 `;
 
-export default function ChatHeaderComponent() {
+export default function ChatHeaderComponent(props: {
+	room: string;
+}): JSX.Element {
 	const [value, setValue] = useState<string>('');
 	const [results, setResults] = useState<any[]>([]);
+	const [open, setOpen] = useState<boolean>(false);
 
 	const search = async (): Promise<any> => {
 		if (!value) return;
@@ -73,6 +79,29 @@ export default function ChatHeaderComponent() {
 		if (e.key === 'Enter') return search();
 	};
 
+	const add = async (u: any) => {
+		const payload = {
+			user: u,
+			room: props.room,
+		};
+
+		const response = await POST({
+			path: '/chat/add-user',
+			body: JSON.stringify(payload),
+		});
+
+		window.alert(response.message);
+
+		if (response.success) {
+			participantsStore.dispatch({
+				type: 'add',
+				payload: payload,
+			});
+		}
+
+		setOpen(false);
+	};
+
 	useEffect(() => {
 		chatStore.subscribe(() => {
 			setResults([]);
@@ -82,10 +111,9 @@ export default function ChatHeaderComponent() {
 	return (
 		<Header>
 			<Form>
-				{results.length > 0 && (
-					<button onClick={() => setResults([])}>Close</button>
-				)}
+				<button onClick={() => setOpen(false)}>Close</button>
 				<input
+					onFocus={() => setOpen(true)}
 					onKeyPress={handleKeyPress}
 					placeholder='Peter Smith'
 					value={value}
@@ -94,11 +122,11 @@ export default function ChatHeaderComponent() {
 				<button onClick={search}>Search</button>
 			</Form>
 
-			{results.length > 0 && (
+			{open && (
 				<Results>
 					<List>
 						{results.map((r: any, i: number) => (
-							<ListItem>
+							<ListItem key={i} onClick={() => add(r)}>
 								<AvatarItem>
 									<img src={r.picture} alt={r.nickname} />
 								</AvatarItem>
