@@ -1,6 +1,7 @@
 /** @format */
 
 import styled from 'styled-components';
+import IconComponent from './IconComponent';
 
 const Header = styled.header`
 	display: flex;
@@ -11,6 +12,9 @@ const Header = styled.header`
 
 	p {
 		margin-top: 20px;
+		color: #faf7f0;
+		display: flex;
+		align-items: center;
 	}
 
 	img {
@@ -25,7 +29,9 @@ export default function SidebarHeaderComponent(props: IUser): JSX.Element {
 	return (
 		<Header>
 			<img src={props.picture} alt={props.nickname} />
-			<p>{props.nickname}</p>
+			<p>
+				<span>{props.nickname}</span>
+			</p>
 		</Header>
 	);
 }

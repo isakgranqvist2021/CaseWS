@@ -16,10 +16,10 @@ export const AvatarItem = styled.div`
 	border-radius: 50%;
 	overflow: hidden;
 	user-select: none;
-	color: rgb(255, 255, 255);
-	background-color: rgb(138, 6, 46);
+	color: #faf7f0;
+	background-color: #2e3132;
 	box-sizing: content-box;
-	border: 2px solid rgb(233, 233, 233);
+	border: 2px solid #5c6c6c;
 	font-size: 14px;
 	text-transform: uppercase;
 
@@ -35,4 +35,27 @@ export const AvatarItem = styled.div`
 		color: transparent;
 		text-indent: 10000px;
 	}
+`;
+
+export const Button = styled('button')<{ small?: boolean }>`
+	padding: 13px;
+	display: block;
+	margin: 10px auto;
+	border-radius: 5px;
+	border: none;
+	background-color: #ffffff;
+	cursor: pointer;
+	width: ${(props) => (props.small ? 'auto' : '90%')};
+	border: none;
+	color: #7e2d97;
+	min-width: 100px;
+`;
+
+export const Input = styled.input`
+	flex-grow: 1;
+	padding: 13px;
+	border: none;
+	background-color: #faf7f0;
+	margin-right: 10px;
+	border-radius: 5px;
 `;

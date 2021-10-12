@@ -1,21 +1,14 @@
 /** @format */
 
 import { useState } from 'react';
+import { Input, Button } from 'Styles/styles';
 import styled from 'styled-components';
 
 const Form = styled.div`
-	background-color: #333;
+	background-color: #7e2d97;
 	display: flex;
+	align-items: center;
 	padding: 10px;
-
-	button,
-	input {
-		padding: 10px;
-	}
-
-	input {
-		flex-grow: 1;
-	}
 `;
 
 export default function FormComponent(props: {
@@ -44,13 +37,15 @@ export default function FormComponent(props: {
 
 	return (
 		<Form>
-			<input
+			<Input
 				onKeyPress={handleKeyPress}
 				placeholder='Message..'
 				value={message}
 				onChange={(e: any) => setMessage(e.target.value)}
 			/>
-			<button onClick={send}>Send</button>
+			<Button onClick={send} small={true}>
+				Send
+			</Button>
 		</Form>
 	);
 }

@@ -3,12 +3,13 @@
 import { useEffect, useState } from 'react';
 import { POST } from 'Utils/http';
 import { AvatarItem } from 'Styles/styles';
+import { Input, Button } from 'Styles/styles';
 import styled from 'styled-components';
 import chatStore from 'Store/chat.store';
 import participantsStore from 'Store/participants.store';
 
 const Header = styled.header`
-	background-color: #333;
+	background-color: #7e2d97;
 	padding: 10px;
 	position: relative;
 `;
@@ -16,15 +17,7 @@ const Header = styled.header`
 const Form = styled.div`
 	width: 100%;
 	display: flex;
-
-	input {
-		flex-grow: 1;
-	}
-
-	input,
-	button {
-		padding: 10px;
-	}
+	align-items: center;
 `;
 
 const Results = styled.div`
@@ -32,13 +25,13 @@ const Results = styled.div`
 	top: 100%;
 	left: 0;
 	width: 100%;
-	background-color: #707070;
+	background-color: #7e2d97;
 	height: 400px;
 	overflow: auto;
 `;
 
 const List = styled.ul`
-	color: #fff;
+	color: #faf7f0;
 `;
 
 const ListItem = styled.li`
@@ -48,7 +41,7 @@ const ListItem = styled.li`
 	cursor: pointer;
 
 	&:not(:last-of-type) {
-		border-bottom: 1px solid #fff;
+		border-bottom: 1px solid #faf7f0;
 	}
 
 	p {
@@ -110,17 +103,26 @@ export default function ChatHeaderComponent(props: {
 	};
 
 	useEffect(() => {
-		chatStore.subscribe(() => {
+		let us = chatStore.subscribe(() => {
 			setResults([]);
 		});
+
+		return () => us();
 	}, []);
 
 	return (
 		<Header>
 			{props.admin && (
 				<Form>
-					<button onClick={() => setOpen(false)}>Close</button>
-					<input
+					{open && (
+						<Button
+							style={{ marginRight: 10 }}
+							onClick={() => setOpen(false)}
+							small={true}>
+							Close
+						</Button>
+					)}
+					<Input
 						onBlur={handleBlur}
 						onFocus={() => setOpen(true)}
 						onKeyPress={handleKeyPress}
@@ -128,7 +130,9 @@ export default function ChatHeaderComponent(props: {
 						value={value}
 						onChange={(e: any) => setValue(e.target.value)}
 					/>
-					<button onClick={search}>Search</button>
+					<Button onClick={search} small>
+						Search
+					</Button>
 				</Form>
 			)}
 

@@ -1,50 +1,21 @@
 /** @format */
 
 import { useEffect, useState } from 'react';
-import { GET, POST } from 'Utils/http';
-import styled from 'styled-components';
-import AvatarGroupComponent from 'Components/Display/AvatarGroupComponent';
+import { GET } from 'Utils/http';
 import chatStore from 'Store/chat.store';
 import participantsStore from 'Store/participants.store';
+import SidebarChatComponent from './SidebarChatComponent';
 
-const Chat = styled.div`
-	display: flex;
-	justify-content: space-between;
-	border-bottom: 1px solid lightgray;
-	padding: 10px;
-`;
-
-const Button = styled.button`
-	width: 90%;
-	padding: 5px;
-	display: block;
-	margin: 10px auto;
-`;
-
-const Action = styled.button`
-	color: #fff;
-	border: none;
-	cursor: pointer;
-	width: 75px;
-	text-align: center;
-	border-radius: 5px;
-
-	&.leave {
-		background-color: #bb576b;
-	}
-
-	&.join {
-		background-color: #3ab362;
-	}
-`;
-
-export default function ChatsComponent(props: IUser): JSX.Element {
+export default function ChatsComponent(props: {
+	user: IUser;
+	newChat: IChat | null;
+}): JSX.Element {
 	const [chats, setChats] = useState<IChat[]>([]);
 	const [active, setActive] = useState<string | null>(null);
 
 	const fetchChats = async (signal: AbortSignal) => {
 		const response = await GET({
-			path: '/chat/chats/' + props.sub,
+			path: '/chat/chats/' + props.user.sub,
 			signal: signal,
 		});
 
@@ -52,22 +23,25 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 		return Promise.resolve();
 	};
 
-	const fetchChat = async (signal: AbortSignal, id: string) => {
+	const fetchChat = async (room: string) => {
+		const abortController = new AbortController();
+
+		setTimeout(() => () => abortController.abort(), 5000);
 		const response = await GET({
-			path: '/chat/find/' + id,
-			signal: signal,
+			path: '/chat/find/' + room,
+			signal: abortController.signal,
 		});
 
 		if (response.success) {
 			let c = chats;
-			c[c.findIndex((value: IChat) => value._id === id)] = response.data;
-			setChats([...c]);
+			c[c.findIndex((value: IChat) => value._id === room)] =
+				response.data;
+			return setChats([...c]);
 		}
 	};
 
 	const action = async (action: string, chat: IChat) => {
-		const abortController = new AbortController();
-		await fetchChat(abortController.signal, chat._id);
+		await fetchChat(chat._id);
 
 		if (action === 'leave') {
 			chatStore.dispatch({
@@ -104,22 +78,6 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 		});
 	};
 
-	const submit = async () => {
-		const abortController = new AbortController();
-
-		const response = await POST({
-			path: '/chat/create',
-			body: JSON.stringify(props),
-			signal: abortController.signal,
-		});
-
-		window.alert(response.message);
-
-		if (response.success) {
-			setChats([...chats, response.data]);
-		}
-	};
-
 	useEffect(() => {
 		const abortController = new AbortController();
 		fetchChats(abortController.signal);
@@ -139,38 +97,22 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 		});
 
 		return () => abortController.abort();
-	}, [props.sub]);
+	}, [props.user.sub]);
+
+	useEffect(() => {
+		if (!props.newChat) return;
+		setChats([...chats, props.newChat]);
+	}, [props.newChat]);
 
 	return (
 		<div>
-			<Button onClick={submit}>New Chat</Button>
-
 			{chats.map((chat: IChat) => (
-				<Chat key={chat._id}>
-					<AvatarGroupComponent
-						max={4}
-						images={chat.participants.map((p: IUser) => {
-							return {
-								src: p.picture,
-								alt: p.nickname,
-							};
-						})}
-					/>
-
-					{active !== null && active === chat._id ? (
-						<Action
-							className='leave'
-							onClick={() => action('leave', chat)}>
-							Leave
-						</Action>
-					) : (
-						<Action
-							className='join'
-							onClick={() => action('join', chat)}>
-							Join
-						</Action>
-					)}
-				</Chat>
+				<SidebarChatComponent
+					key={chat._id}
+					chat={chat}
+					action={action}
+					active={active === chat._id}
+				/>
 			))}
 		</div>
 	);

@@ -8,6 +8,6 @@ export default function broadcast(room: IRoom, payload: IMessage, b?: boolean) {
 
 	return clients.forEach((client: WebSocket) => {
 		if (client.readyState === WebSocket.OPEN)
-			client.send(payload, { binary: b });
+			client.send(JSON.stringify(payload), { binary: b });
 	});
 }
