@@ -3,17 +3,10 @@
 import { rooms, IRoom } from './rooms';
 import WebSocket from 'ws';
 import chat from '../models/chat';
+import broadcast from './broadcast';
 
-function broadcast(clients: WebSocket[], payload: any, b?: boolean) {
-	clients.forEach((client: WebSocket) => {
-		if (client.readyState === WebSocket.OPEN) {
-			client.send(payload, { binary: b });
-		}
-	});
-}
-
-export default async function send(ws: WebSocket, event: any, b?: boolean) {
-	let room = rooms.find((room: IRoom) => room.id === event.room);
+export default async function send(ws: WebSocket, payload: any, b?: boolean) {
+	let room = rooms.find((room: IRoom) => room.id === payload.room);
 	if (!room) return;
 
 	let clients = room.sockets.map((s: { socket: WebSocket; id: string }) => {
@@ -21,9 +14,10 @@ export default async function send(ws: WebSocket, event: any, b?: boolean) {
 	});
 
 	let message = {
-		message: event.message,
+		message: payload.message,
 		createdAt: new Date(),
-		user: event.user,
+		user: payload.user,
+		type: 'message',
 	};
 
 	await chat.updateOne(
@@ -33,5 +27,5 @@ export default async function send(ws: WebSocket, event: any, b?: boolean) {
 		}
 	);
 
-	broadcast(clients, JSON.stringify(message));
+	return broadcast(clients, JSON.stringify(message));
 }

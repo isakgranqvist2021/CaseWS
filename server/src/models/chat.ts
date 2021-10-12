@@ -7,6 +7,7 @@ const chatSchema = new mongoose.Schema({
 	updatedAt: { type: Date, default: null },
 	participants: { type: Array, default: [] },
 	messages: { type: Array, default: [] },
+	type: { type: String, required: true },
 });
 
 const ChatModel = mongoose.model('Chat', chatSchema);

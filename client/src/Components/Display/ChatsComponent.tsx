@@ -54,7 +54,7 @@ export default function ChatsComponent(props: IUser): JSX.Element {
 
 	const action = async (action: string, chat: IChat) => {
 		const abortController = new AbortController();
-		await fetchChats(abortController.signal);
+		fetchChats(abortController.signal);
 
 		if (action === 'leave') {
 			chatStore.dispatch({

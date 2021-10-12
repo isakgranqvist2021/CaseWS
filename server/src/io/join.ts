@@ -3,18 +3,18 @@
 import { rooms, IRoom } from './rooms';
 import WebSocket from 'ws';
 
-export default function join(ws: WebSocket, event: any, b?: boolean) {
-	let room = rooms.find((room: IRoom) => room.id === event.room);
+export default function join(ws: WebSocket, payload: any, b?: boolean) {
+	let room = rooms.find((room: IRoom) => room.id === payload.room);
 
 	if (!room) {
-		rooms.push({
-			id: event.room,
-			sockets: [{ socket: ws, id: event.socketId }],
+		return rooms.push({
+			id: payload.room,
+			sockets: [{ socket: ws, id: payload.socketId }],
 		});
 	} else {
-		room.sockets.push({
+		return room.sockets.push({
 			socket: ws,
-			id: event.socketId,
+			id: payload.socketId,
 		});
 	}
 }

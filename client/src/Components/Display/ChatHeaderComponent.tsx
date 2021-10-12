@@ -58,6 +58,7 @@ const ListItem = styled.li`
 
 export default function ChatHeaderComponent(props: {
 	room: string;
+	admin: boolean;
 }): JSX.Element {
 	const [value, setValue] = useState<string>('');
 	const [results, setResults] = useState<any[]>([]);
@@ -103,6 +104,11 @@ export default function ChatHeaderComponent(props: {
 		setOpen(false);
 	};
 
+	const handleBlur = () => {
+		if (results.length > 0) return;
+		return setOpen(false);
+	};
+
 	useEffect(() => {
 		chatStore.subscribe(() => {
 			setResults([]);
@@ -111,19 +117,22 @@ export default function ChatHeaderComponent(props: {
 
 	return (
 		<Header>
-			<Form>
-				<button onClick={() => setOpen(false)}>Close</button>
-				<input
-					onFocus={() => setOpen(true)}
-					onKeyPress={handleKeyPress}
-					placeholder='Peter Smith'
-					value={value}
-					onChange={(e: any) => setValue(e.target.value)}
-				/>
-				<button onClick={search}>Search</button>
-			</Form>
+			{props.admin && (
+				<Form>
+					<button onClick={() => setOpen(false)}>Close</button>
+					<input
+						onBlur={handleBlur}
+						onFocus={() => setOpen(true)}
+						onKeyPress={handleKeyPress}
+						placeholder='Peter Smith'
+						value={value}
+						onChange={(e: any) => setValue(e.target.value)}
+					/>
+					<button onClick={search}>Search</button>
+				</Form>
+			)}
 
-			{open && (
+			{open && props.admin && (
 				<Results>
 					<List>
 						{results.map((r: any, i: number) => (

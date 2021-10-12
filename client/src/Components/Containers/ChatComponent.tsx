@@ -21,7 +21,7 @@ export default function ChatComponent(props: {
 }): JSX.Element {
 	return (
 		<Chat>
-			{props.admin && <ChatHeaderComponent room={props.room} />}
+			<ChatHeaderComponent room={props.room} admin={props.admin} />
 			{props.messages.map((m: any, i: number) => (
 				<MessageComponent
 					key={i}
