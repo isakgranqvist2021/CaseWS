@@ -16,6 +16,11 @@ const Aside = styled.aside`
 	width: 275px;
 	height: 100vh;
 	background-color: #2e3132;
+
+	@media (max-width: 960px) {
+		position: fixed;
+		z-index: 5;
+	}
 `;
 
 const Body = styled.div`

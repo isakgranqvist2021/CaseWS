@@ -7,6 +7,7 @@ import ChatFormComponent from 'Components/Chat/ChatFormComponent';
 import LoadingComponent from 'Components/Feedback/LoadingComponent';
 import ChatMessageComponent from 'Components/Chat/ChatMessageComponent';
 import ChatHeaderComponent from 'Components/Chat/ChatHeaderComponent';
+import NoChatComponent from 'Components/Chat/NoChatComponent';
 import settings from 'Utils/settings';
 import chatStore from 'Store/chat.store';
 
@@ -25,6 +26,10 @@ const Chat = styled.div`
 	overflow: auto;
 	display: flex;
 	flex-direction: column;
+`;
+
+const Messages = styled.div`
+	margin: 10px;
 `;
 
 export default function ChatComponent(props: IUser) {
@@ -104,10 +109,8 @@ export default function ChatComponent(props: IUser) {
 		socket.onmessage = (event: any) => {
 			let data = JSON.parse(event.data);
 
-			if (data.type === 'event' && data.message.includes('joined')) {
-				console.log('Joined ->', data.user);
-			} else if (data.type === 'event' && data.message.includes('left')) {
-				console.log('Left ->', data.user);
+			if (data.type === 'event') {
+				console.log(data);
 			}
 
 			setMessage(data);
@@ -116,8 +119,7 @@ export default function ChatComponent(props: IUser) {
 		return () => us();
 	}, []);
 
-	if (!chat)
-		return <LoadingComponent reason='Please join a chat' loader={false} />;
+	if (!chat) return <NoChatComponent />;
 
 	return (
 		<Content>
@@ -128,14 +130,15 @@ export default function ChatComponent(props: IUser) {
 						(p: IUser) => p.sub === props.sub && p.role === 'admin'
 					)}
 				/>
-				{chat.messages.map((m: any, i: number) => (
-					<ChatMessageComponent
-						key={i}
-						message={m.message}
-						nickname={m.user.nickname}
-						date={m.createdAt}
-					/>
-				))}
+				<Messages>
+					{chat.messages.map((m: IMessage, i: number) => (
+						<ChatMessageComponent
+							key={i}
+							message={m}
+							sub={props.sub}
+						/>
+					))}
+				</Messages>
 			</Chat>
 
 			<ChatFormComponent room={chat._id} user={props} socket={socket} />

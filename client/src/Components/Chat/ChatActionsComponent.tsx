@@ -18,6 +18,7 @@ const DropDown = styled('div')<{ open: boolean }>`
 	background-color: #7e2d97;
 	border: 1px solid #fff;
 	transition: all 300ms ease;
+	z-index: 3;
 
 	opacity: ${(props) => (props.open ? '1' : '0')};
 `;

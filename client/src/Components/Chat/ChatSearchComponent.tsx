@@ -25,6 +25,7 @@ const Results = styled.div`
 	height: 400px;
 	overflow: auto;
 	border: 1px solid #fff;
+	z-index: 3;
 `;
 
 const ListItem = styled.li`

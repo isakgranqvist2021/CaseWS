@@ -17,6 +17,8 @@ interface IMessage {
 	message: string;
 	createdAt: Date | string;
 	user: IUser;
+	type: 'event' | 'message';
+	eventType?: 'join' | 'leave';
 }
 
 interface IChat {
