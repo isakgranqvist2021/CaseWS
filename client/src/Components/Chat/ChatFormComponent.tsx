@@ -49,6 +49,12 @@ export default function ChatFormComponent(props: {
 
 	const send = (): void => {
 		if (!message) return;
+
+		if (!props.socket.OPEN) {
+			window.alert('connection has closed');
+			window.location.reload();
+		}
+
 		props.socket.send(
 			JSON.stringify({
 				type: 'message',
@@ -63,6 +69,11 @@ export default function ChatFormComponent(props: {
 	const upload = async (e: React.DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
 		setDrag(false);
+
+		if (!props.socket.OPEN) {
+			window.alert('connection has closed');
+			window.location.reload();
+		}
 
 		if (e.dataTransfer.files.length >= 5)
 			return window.alert('max 5 files each time');

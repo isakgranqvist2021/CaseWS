@@ -42,7 +42,7 @@ export default function ChatComponent(props: IUser) {
 	const [chat, setChat] = useState<IChat | null>(null);
 	const [message, setMessage] = useState<any>();
 	const [mutate, setMutate] = useState<string>('');
-	const [dragOver, setDragOver] = useState<boolean>(false);
+	const [hideEvents, setHideEvents] = useState<boolean>(false);
 
 	const stateChange = () => {
 		let ns = chatStore.getState();
@@ -132,6 +132,10 @@ export default function ChatComponent(props: IUser) {
 			<Dropzone>
 				<Chat>
 					<ChatHeaderComponent
+						events={{
+							state: hideEvents,
+							action: setHideEvents,
+						}}
 						room={chat._id}
 						user={props}
 						admin={chat.participants.some(
@@ -140,13 +144,17 @@ export default function ChatComponent(props: IUser) {
 						)}
 					/>
 					<Messages>
-						{chat.messages.map((m: IMessage, i: number) => (
-							<ChatMessageComponent
-								key={i}
-								message={m}
-								sub={props.sub}
-							/>
-						))}
+						{chat.messages
+							.filter((m: IMessage) =>
+								hideEvents ? m.type !== 'event' : m
+							)
+							.map((m: IMessage, i: number) => (
+								<ChatMessageComponent
+									key={i}
+									message={m}
+									sub={props.sub}
+								/>
+							))}
 					</Messages>
 				</Chat>
 

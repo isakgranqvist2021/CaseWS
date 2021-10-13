@@ -50,6 +50,10 @@ const ListItem = styled.li`
 export default function ChatActionsComponent(props: {
 	user: IUser;
 	admin: boolean;
+	events: {
+		state: boolean;
+		action: any;
+	};
 }): JSX.Element {
 	const [open, setOpen] = useState<boolean>(false);
 
@@ -80,6 +84,14 @@ export default function ChatActionsComponent(props: {
 
 			<DropDown open={open}>
 				<List>
+					<ListItem
+						onClick={() =>
+							props.events.action(
+								!props.events.state ? true : false
+							)
+						}>
+						{props.events.state ? 'Show' : 'Hide'} Events
+					</ListItem>
 					<ListItem onClick={leave}>Leave Chat</ListItem>
 					{props.admin && (
 						<ListItem onClick={delChat}>Delete Chat</ListItem>

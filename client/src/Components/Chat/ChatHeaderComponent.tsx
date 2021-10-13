@@ -16,12 +16,20 @@ export default function ChatHeaderComponent(props: {
 	room: string;
 	admin: boolean;
 	user: IUser;
+	events: {
+		state: boolean;
+		action: any;
+	};
 }): JSX.Element {
 	return (
 		<Header>
 			{props.admin && <SearchComponent room={props.room} />}
 			{!props.admin && <span></span>}
-			<ChatActionsComponent user={props.user} admin={props.admin} />
+			<ChatActionsComponent
+				user={props.user}
+				admin={props.admin}
+				events={props.events}
+			/>
 		</Header>
 	);
 }
