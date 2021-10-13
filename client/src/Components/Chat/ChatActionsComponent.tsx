@@ -2,8 +2,9 @@
 
 import IconComponent from 'Components/Utils/IconComponent';
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { Button } from 'Styles/styles';
+import { POST } from 'Utils/http';
+import styled from 'styled-components';
 
 const Menu = styled.div`
 	position: relative;
@@ -46,7 +47,10 @@ const ListItem = styled.li`
 	}
 `;
 
-export default function ChatActionsComponent(): JSX.Element {
+export default function ChatActionsComponent(props: {
+	user: IUser;
+	admin: boolean;
+}): JSX.Element {
 	const [open, setOpen] = useState<boolean>(false);
 
 	const onClick = () => {
@@ -77,8 +81,9 @@ export default function ChatActionsComponent(): JSX.Element {
 			<DropDown open={open}>
 				<List>
 					<ListItem onClick={leave}>Leave Chat</ListItem>
-					<ListItem onClick={report}>Report Chat</ListItem>
-					<ListItem onClick={delChat}>Delete Chat</ListItem>
+					{props.admin && (
+						<ListItem onClick={delChat}>Delete Chat</ListItem>
+					)}
 				</List>
 			</DropDown>
 		</Menu>

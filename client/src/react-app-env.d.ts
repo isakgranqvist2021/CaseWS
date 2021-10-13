@@ -17,8 +17,9 @@ interface IMessage {
 	message: string;
 	createdAt: Date | string;
 	user: IUser;
-	type: 'event' | 'message';
+	type: 'event' | 'message' | 'file';
 	eventType?: 'join' | 'leave';
+	files?: any[];
 }
 
 interface IChat {

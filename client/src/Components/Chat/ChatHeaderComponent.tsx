@@ -15,12 +15,13 @@ const Header = styled.header`
 export default function ChatHeaderComponent(props: {
 	room: string;
 	admin: boolean;
+	user: IUser;
 }): JSX.Element {
 	return (
 		<Header>
 			{props.admin && <SearchComponent room={props.room} />}
 			{!props.admin && <span></span>}
-			<ChatActionsComponent />
+			<ChatActionsComponent user={props.user} admin={props.admin} />
 		</Header>
 	);
 }

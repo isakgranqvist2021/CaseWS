@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
 import ChatFormComponent from 'Components/Chat/ChatFormComponent';
@@ -11,18 +11,8 @@ import settings from 'Utils/settings';
 import chatStore from 'Store/chat.store';
 
 const Content = styled.div`
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
 	width: 100%;
 	height: 100vh;
-	position: relative;
-
-	&.active {
-		position: absolute;
-		inset: 0;
-		background-color: black;
-	}
 `;
 
 const Chat = styled.div`
@@ -38,19 +28,21 @@ const Messages = styled.div`
 	margin: 10px;
 `;
 
+const Dropzone = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: relative;
+	height: 100%;
+	width: 100%;
+`;
+
 export default function ChatComponent(props: IUser) {
 	const [socket, setSocket] = useState<WebSocket>(new WebSocket(settings.ws));
 	const [chat, setChat] = useState<IChat | null>(null);
 	const [message, setMessage] = useState<any>();
 	const [mutate, setMutate] = useState<string>('');
 	const [dragOver, setDragOver] = useState<boolean>(false);
-
-	const dropEvent = (e: any) => {
-		e.preventDefault();
-		setDragOver(false);
-
-		console.log(e.dataTransfer.files);
-	};
 
 	const stateChange = () => {
 		let ns = chatStore.getState();
@@ -137,25 +129,33 @@ export default function ChatComponent(props: IUser) {
 
 	return (
 		<Content>
-			<Chat>
-				<ChatHeaderComponent
-					room={chat._id}
-					admin={chat.participants.some(
-						(p: IUser) => p.sub === props.sub && p.role === 'admin'
-					)}
-				/>
-				<Messages>
-					{chat.messages.map((m: IMessage, i: number) => (
-						<ChatMessageComponent
-							key={i}
-							message={m}
-							sub={props.sub}
-						/>
-					))}
-				</Messages>
-			</Chat>
+			<Dropzone>
+				<Chat>
+					<ChatHeaderComponent
+						room={chat._id}
+						user={props}
+						admin={chat.participants.some(
+							(p: IUser) =>
+								p.sub === props.sub && p.role === 'admin'
+						)}
+					/>
+					<Messages>
+						{chat.messages.map((m: IMessage, i: number) => (
+							<ChatMessageComponent
+								key={i}
+								message={m}
+								sub={props.sub}
+							/>
+						))}
+					</Messages>
+				</Chat>
 
-			<ChatFormComponent room={chat._id} user={props} socket={socket} />
+				<ChatFormComponent
+					room={chat._id}
+					user={props}
+					socket={socket}
+				/>
+			</Dropzone>
 		</Content>
 	);
 }

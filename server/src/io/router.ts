@@ -4,7 +4,6 @@ import WebSocket from 'ws';
 import join from '../io/join';
 import leave from '../io/leave';
 import send from '../io/send';
-import { sockets } from './store';
 
 export default function io(ws: WebSocket) {
 	ws.on('message', (e: any, isBinary: boolean) => {

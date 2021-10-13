@@ -15,6 +15,37 @@ const Event = styled.div`
 	}
 `;
 
+const Uploads = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	img {
+		max-height: 200px;
+		object-fit: contain;
+		margin-right: auto;
+		display: block;
+	}
+`;
+
+const Files = styled.div`
+	a {
+		color: #fff;
+	}
+`;
+
+const Images = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+
+	img {
+		max-height: 200px;
+		object-fit: contain;
+		margin-right: auto;
+		display: block;
+	}
+`;
+
 const Message = styled.div`
 	color: #ffffff;
 	padding: 15px;
@@ -24,7 +55,6 @@ const Message = styled.div`
 	border-radius: 0.4em;
 	width: 75%;
 	display: flex;
-	align-items: center;
 
 	&:not(:last-of-type) {
 		margin-bottom: 15px;
@@ -57,12 +87,52 @@ export default function ChatMessageComponent(props: {
 	sub: string | undefined;
 }): JSX.Element {
 	const { message } = props;
+	console.log(message);
 
 	let date = message.createdAt;
 	if (typeof date === 'string') {
 		date = formatDistance(new Date(message.createdAt), new Date(), {
 			addSuffix: true,
 		});
+	}
+
+	if (message.type === 'file') {
+		return (
+			<Message className={message.user.sub === props.sub ? 'me' : ''}>
+				<AvatarItem>
+					<img src={message.user.picture} />
+				</AvatarItem>
+				<Body>
+					<Header>
+						<span>{date}</span>
+						<span>{message.user.nickname}</span>
+					</Header>
+					{message.files && (
+						<Uploads>
+							<Files>
+								{message.files
+									.filter((f: any) => f.fileType === 'file')
+									.map((f: any, i: number) => (
+										<a key={i} href={f.src} target='_blank'>
+											{f.filename}
+										</a>
+									))}
+							</Files>
+
+							<Images>
+								{message.files
+									.filter((f: any) => f.fileType === 'image')
+									.map((f: any, i: number) => (
+										<a key={i} href={f.src} target='_blank'>
+											<img src={f.src} alt={f.filename} />
+										</a>
+									))}
+							</Images>
+						</Uploads>
+					)}
+				</Body>
+			</Message>
+		);
 	}
 
 	if (message.type === 'event')

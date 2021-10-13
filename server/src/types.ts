@@ -6,8 +6,9 @@ export interface IMessage {
 	message: string;
 	createdAt: Date | string;
 	user: any;
-	type: 'message' | 'event';
+	type: 'message' | 'event' | 'file';
 	eventType?: string;
+	files?: any[];
 }
 
 export interface IRoom {

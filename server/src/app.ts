@@ -18,6 +18,7 @@ const PORT = process.env.PORT || 8080;
 import router from './router';
 import io from './io/router';
 
+app.use('/uploads', express.static('./uploads'));
 app.use(express.json());
 app.use(cors());
 app.use('/chat', router);
