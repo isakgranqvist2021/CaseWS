@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import ChatFormComponent from 'Components/Chat/ChatFormComponent';
-import LoadingComponent from 'Components/Feedback/LoadingComponent';
 import ChatMessageComponent from 'Components/Chat/ChatMessageComponent';
 import ChatHeaderComponent from 'Components/Chat/ChatHeaderComponent';
 import NoChatComponent from 'Components/Chat/NoChatComponent';
@@ -17,6 +16,13 @@ const Content = styled.div`
 	justify-content: space-between;
 	width: 100%;
 	height: 100vh;
+	position: relative;
+
+	&.active {
+		position: absolute;
+		inset: 0;
+		background-color: black;
+	}
 `;
 
 const Chat = styled.div`
@@ -37,6 +43,14 @@ export default function ChatComponent(props: IUser) {
 	const [chat, setChat] = useState<IChat | null>(null);
 	const [message, setMessage] = useState<any>();
 	const [mutate, setMutate] = useState<string>('');
+	const [dragOver, setDragOver] = useState<boolean>(false);
+
+	const dropEvent = (e: any) => {
+		e.preventDefault();
+		setDragOver(false);
+
+		console.log(e.dataTransfer.files);
+	};
 
 	const stateChange = () => {
 		let ns = chatStore.getState();

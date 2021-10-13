@@ -14,6 +14,10 @@ const Form = styled.div`
 	display: flex;
 	align-items: center;
 	position: relative;
+
+	@media (max-width: 960px) {
+		width: 100%;
+	}
 `;
 
 const Results = styled.div`

@@ -33,6 +33,10 @@ const Message = styled.div`
 	&.me {
 		background-color: #929292;
 	}
+
+	@media (max-width: 960px) {
+		width: 90%;
+	}
 `;
 
 const Body = styled.div`

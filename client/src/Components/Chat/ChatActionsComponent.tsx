@@ -7,6 +7,10 @@ import { Button } from 'Styles/styles';
 
 const Menu = styled.div`
 	position: relative;
+
+	@media (max-width: 960px) {
+		margin-left: 10px;
+	}
 `;
 
 const DropDown = styled('div')<{ open: boolean }>`
@@ -57,6 +61,8 @@ export default function ChatActionsComponent(): JSX.Element {
 		console.log('report');
 	};
 
+	const delChat = () => {};
+
 	useEffect(() => {
 		window.addEventListener('click', onClick);
 		return () => window.removeEventListener('click', onClick);
@@ -72,6 +78,7 @@ export default function ChatActionsComponent(): JSX.Element {
 				<List>
 					<ListItem onClick={leave}>Leave Chat</ListItem>
 					<ListItem onClick={report}>Report Chat</ListItem>
+					<ListItem onClick={delChat}>Delete Chat</ListItem>
 				</List>
 			</DropDown>
 		</Menu>
