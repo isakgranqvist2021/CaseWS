@@ -31,6 +31,7 @@ export default async function leave(ws: WebSocket, payload: any, b?: boolean) {
 		createdAt: new Date(),
 		user: payload.user,
 		type: 'event',
+		eventType: 'leave',
 	};
 
 	await chat.updateOne(

@@ -45,7 +45,6 @@ export default function ChatActionsComponent(): JSX.Element {
 	const [open, setOpen] = useState<boolean>(false);
 
 	const onClick = () => {
-		if (!open) return;
 		setOpen(false);
 	};
 

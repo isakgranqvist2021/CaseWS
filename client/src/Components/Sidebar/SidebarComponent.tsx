@@ -4,8 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Button } from 'Styles/styles';
 import { POST } from 'Utils/http';
 import SidebarHeaderComponent from 'Components/Sidebar/SidebarHeaderComponent';
-import ChatsComponent from 'Components/Chat/ChatsComponent';
-
+import SidebarChatsComponent from 'Components/Sidebar/SidebarChatsComponent';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 
@@ -64,7 +63,7 @@ export default function SidebarComponent(props: IUser): JSX.Element {
 			<Body>
 				<SidebarHeaderComponent {...props} />
 				<Content>
-					<ChatsComponent user={props} newChat={newChat} />
+					<SidebarChatsComponent user={props} newChat={newChat} />
 				</Content>
 				<Footer>
 					<Button

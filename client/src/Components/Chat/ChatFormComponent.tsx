@@ -9,9 +9,10 @@ const Form = styled.div`
 	background-color: #7e2d97;
 	display: flex;
 	align-items: center;
+	padding: 1rem;
 `;
 
-export default function FormComponent(props: {
+export default function ChatFormComponent(props: {
 	room: string;
 	user: IUser;
 	socket: WebSocket;

@@ -27,6 +27,7 @@ export default async function join(ws: WebSocket, payload: any, b?: boolean) {
 		createdAt: new Date(),
 		user: payload.user,
 		type: 'event',
+		eventType: 'join',
 	};
 
 	await chat.updateOne(

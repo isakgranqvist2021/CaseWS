@@ -16,7 +16,7 @@ const Header = styled.header`
 	margin-bottom: 10px;
 `;
 
-export default function MessageComponent(props: {
+export default function ChatMessageComponent(props: {
 	message: string;
 	nickname: string;
 	date: Date | string;

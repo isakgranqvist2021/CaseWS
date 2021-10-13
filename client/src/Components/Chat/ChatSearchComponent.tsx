@@ -43,7 +43,9 @@ const ListItem = styled.li`
 	}
 `;
 
-export default function SearchComponent(props: { room: string }): JSX.Element {
+export default function ChatSearchComponent(props: {
+	room: string;
+}): JSX.Element {
 	const [value, setValue] = useState<string>('');
 	const [results, setResults] = useState<any[]>([]);
 	const [open, setOpen] = useState<boolean>(false);

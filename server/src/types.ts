@@ -7,6 +7,7 @@ export interface IMessage {
 	createdAt: Date | string;
 	user: any;
 	type: 'message' | 'event';
+	eventType?: string;
 }
 
 export interface IRoom {
