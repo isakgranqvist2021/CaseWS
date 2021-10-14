@@ -65,16 +65,13 @@ export default function ChatSearchComponent(props: {
 			body: JSON.stringify({ value }),
 		});
 
-		console.log(response);
-
 		if (response.success) setResults(response.data);
+
+		return;
 	};
 
 	useEffect(() => {
-		let us = chatStore.subscribe(() => {
-			setResults([]);
-		});
-
+		let us = chatStore.subscribe(() => setResults([]));
 		return () => us();
 	}, []);
 

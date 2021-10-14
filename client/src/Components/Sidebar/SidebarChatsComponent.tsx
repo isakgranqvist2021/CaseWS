@@ -18,6 +18,7 @@ export default function SidebarChatsComponent(props: {
 		room: string;
 	} | null>(null);
 	const [pl, setPl] = useState<{ user: string; room: string } | null>(null);
+	const [mutate, setMutate] = useState<boolean>(false);
 
 	const fetchChats = async (signal: AbortSignal) => {
 		const response = await GET({
@@ -83,60 +84,76 @@ export default function SidebarChatsComponent(props: {
 		});
 	};
 
-	useEffect(() => {
+	const mutateChats = () => {
 		if (!pl) return;
+
 		let copy = chats;
-		let chatIndex = copy.findIndex((c: IChat) => c._id === pl.room);
-		if (chatIndex < 0) return;
+		let i = copy.findIndex((c: IChat) => c._id === pl.room);
+		if (i < 0) return;
 
 		if (props.user.sub === pl.user) {
-			copy.splice(chatIndex, 1);
+			copy.splice(i, 1);
 			return setChats([...copy]);
 		}
 
-		copy[chatIndex].participants.splice(
-			copy[chatIndex].participants.findIndex(
-				(u: IUser) => u.sub === pl.user
-			),
-			1
-		);
+		let comparefn = (u: IUser) => u.sub === pl.user;
+		let j = copy[i].participants.findIndex(comparefn);
+		copy[i].participants.splice(j, 1);
+
 		setChats([...copy]);
 		return setPl(null);
-	}, [pl]);
+	};
 
-	useEffect(() => {
+	const mutateParticipants = () => {
 		if (!np) return;
 		let copy = chats;
 		let room = copy.find((c: IChat) => c._id === np?.room);
 		if (!room) return;
+
 		room.participants.push(np.user);
 		setChats([...copy]);
-	}, [np]);
+
+		return setNp(null);
+	};
 
 	useEffect(() => {
-		const abortController = new AbortController();
-		fetchChats(abortController.signal);
+		if (pl) {
+			return mutateChats();
+		}
 
-		participantsStore.subscribe(() => {
-			let ns = participantsStore.getState();
-			if (!ns) return;
-			setNp(ns);
-		});
+		if (np) {
+			return mutateParticipants();
+		}
 
-		return () => abortController.abort();
-	}, [props.user.sub]);
+		if (props.newChat) {
+			return setChats([...chats, props.newChat]);
+		}
 
-	useEffect(() => {
-		if (!props.newChat) return;
-		setChats([...chats, props.newChat]);
-	}, [props.newChat]);
+		if (props.user.sub) {
+			const abortController = new AbortController();
+			fetchChats(abortController.signal);
+
+			participantsStore.subscribe(() => {
+				let ns = participantsStore.getState();
+				if (!ns) return;
+				setNp(ns);
+			});
+
+			return () => abortController.abort();
+		}
+
+		if (mutate) {
+			setMutate(false);
+			return setActive(null);
+		}
+	}, [pl, np, props.newChat, props.user.sub, mutate]);
 
 	useEffect(() => {
 		sidebarStore.subscribe(() => {
 			let state = sidebarStore.getState();
 
 			if (!state) return;
-			if (state.event === 'set active') return setActive(null);
+			if (state.event === 'set active') return setMutate(true);
 			if (state.event === 'remove user')
 				return setPl({
 					user: state.payload.user,

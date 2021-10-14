@@ -18,7 +18,7 @@ const Container = styled.div`
 	}
 `;
 
-export default function NoChatComponent(): JSX.Element {
+export default function ChatWaitingComponent(): JSX.Element {
 	return (
 		<Container>
 			<h2>Waiting room...</h2>

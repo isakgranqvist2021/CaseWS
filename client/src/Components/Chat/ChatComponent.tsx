@@ -7,7 +7,7 @@ import ChatFormComponent from 'Components/Chat/ChatFormComponent';
 import ChatMessageComponent from 'Components/Chat/ChatMessageComponent';
 import ChatHeaderComponent from 'Components/Chat/ChatHeaderComponent';
 import ChatParticipantsComponent from 'Components/Chat/ChatParticipantsComponent';
-import NoChatComponent from 'Components/Chat/NoChatComponent';
+import ChatWaitingComponent from 'Components/Chat/ChatWaitingComponent';
 import settings from 'Utils/settings';
 import chatStore from 'Store/chat.store';
 import sidebarStore from 'Store/sidebar.store';
@@ -38,7 +38,7 @@ export default function ChatComponent(props: IUser) {
 	const socket: WebSocket = new WebSocket(settings.ws);
 	const [chat, setChat] = useState<IChat | null>(null);
 	const [message, setMessage] = useState<any>();
-	const [mutate, setMutate] = useState<string>('');
+	const [mutate, setMutate] = useState<boolean>(false);
 	const [hideEvents, setHideEvents] = useState<boolean>(false);
 
 	const [part, setPart] = useState<IParticipant[]>([]);
@@ -59,9 +59,8 @@ export default function ChatComponent(props: IUser) {
 				join(ns.room1);
 				break;
 			case 'leave':
-				setMutate(ns.room2);
-				leave(ns.room2);
-				break;
+				setMutate(true);
+				return leave(ns.room2);
 			case 'switch':
 				leave(ns.room2);
 				join(ns.room1);
@@ -111,10 +110,13 @@ export default function ChatComponent(props: IUser) {
 			return setMessage(null);
 		}
 
-		if (mutate.length > 0) {
-			setChat(null); // remove active chat and display the "waiting room" screen
-			return setMutate(''); // when the mutate state is updated this if statement will evaluate to true.
-			// the reason for this is because the local state isn't always available in the redux subscribe callback
+		if (mutate) {
+			setMutate(false);
+			sidebarStore.dispatch({
+				type: 'set active',
+				payload: null,
+			});
+			return setChat(null);
 		}
 
 		if (t) {
@@ -132,21 +134,9 @@ export default function ChatComponent(props: IUser) {
 
 		socket.onerror = () => window.location.reload();
 		socket.onclose = () => {
+			console.log('Socket disconnected');
 			if (!chat) return;
-
-			sidebarStore.dispatch({
-				type: 'set active',
-				payload: null,
-			});
-
-			chatStore.dispatch({
-				type: 'leave',
-				payload: {
-					chat: null,
-					room1: undefined,
-					room2: chat._id,
-				},
-			});
+			return setMutate(true);
 		};
 		socket.onopen = () => console.log('WebSocket -> OPEN');
 		socket.onmessage = (event: any) => {
@@ -170,7 +160,7 @@ export default function ChatComponent(props: IUser) {
 		return () => us();
 	}, []);
 
-	if (!chat) return <NoChatComponent />;
+	if (!chat) return <ChatWaitingComponent />;
 
 	return (
 		<Content>

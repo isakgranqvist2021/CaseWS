@@ -9,8 +9,6 @@ export default function occurance(ws: WebSocket, payload: any, b?: boolean) {
 	const room = rooms.find((r: IRoom) => r.id === payload.room);
 	if (!room) return;
 
-	console.log(payload);
-
 	const message: IMessage = {
 		message: '',
 		createdAt: new Date(),
