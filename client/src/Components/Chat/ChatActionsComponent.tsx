@@ -83,7 +83,15 @@ export default function ChatActionsComponent(props: {
 			}),
 		});
 
-		console.log(response);
+		if (response.success) {
+			sidebarStore.dispatch({
+				type: 'remove user',
+				payload: {
+					user: response.data.user.sub,
+					room: response.data.room,
+				},
+			});
+		}
 	};
 
 	const delChat = () => {};

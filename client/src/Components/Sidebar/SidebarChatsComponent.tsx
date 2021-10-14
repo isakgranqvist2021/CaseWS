@@ -89,6 +89,8 @@ export default function SidebarChatsComponent(props: {
 		let chatIndex = copy.findIndex((c: IChat) => c._id === pl.room);
 		if (chatIndex < 0) return;
 
+		console.log(pl);
+
 		if (props.user.sub === pl.user) {
 			copy.splice(chatIndex, 1);
 			return setChats([...copy]);
@@ -100,7 +102,8 @@ export default function SidebarChatsComponent(props: {
 			),
 			1
 		);
-		return setChats([...copy]);
+		setChats([...copy]);
+		return setPl(null);
 	}, [pl]);
 
 	useEffect(() => {
