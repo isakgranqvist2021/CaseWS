@@ -106,11 +106,11 @@ export default function SidebarChatsComponent(props: {
 
 	useEffect(() => {
 		if (!np) return;
-		let update = chats;
-		let room = update.find((c: IChat) => c._id === np?.room);
+		let copy = chats;
+		let room = copy.find((c: IChat) => c._id === np?.room);
 		if (!room) return;
 		room.participants.push(np.user);
-		setChats([...update]);
+		setChats([...copy]);
 	}, [np]);
 
 	useEffect(() => {

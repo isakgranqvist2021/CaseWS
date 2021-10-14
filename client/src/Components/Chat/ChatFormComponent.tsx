@@ -89,6 +89,7 @@ export default function ChatFormComponent(props: {
 
 		formData.append('room', props.room);
 		formData.append('user', JSON.stringify(props.user));
+
 		const response = await POST({
 			path: '/chat/upload',
 			body: formData,
@@ -96,7 +97,6 @@ export default function ChatFormComponent(props: {
 		});
 
 		window.alert(response.message);
-		console.log(response);
 	};
 
 	const handleKeyPress = (e: any) => {
