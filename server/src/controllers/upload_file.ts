@@ -19,7 +19,9 @@ export default async function upload_file(req: Request, res: Response) {
 			});
 
 		const message: IMessage = {
-			message: `${user.nickname} has uploaded ${files.length} files`,
+			message: `${user.nickname} has uploaded ${files.length} file${
+				files.length > 1 ? 's' : ''
+			}`,
 			createdAt: new Date(),
 			user: user,
 			type: 'file',

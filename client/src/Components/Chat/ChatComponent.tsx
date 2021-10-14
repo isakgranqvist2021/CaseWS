@@ -13,6 +13,9 @@ import chatStore from 'Store/chat.store';
 const Content = styled.div`
 	width: 100%;
 	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 `;
 
 const Chat = styled.div`
@@ -25,16 +28,7 @@ const Chat = styled.div`
 `;
 
 const Messages = styled.div`
-	margin: 10px;
-`;
-
-const Dropzone = styled.div`
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	position: relative;
-	height: 100%;
-	width: 100%;
+	padding: 30px;
 `;
 
 export default function ChatComponent(props: IUser) {
@@ -129,41 +123,34 @@ export default function ChatComponent(props: IUser) {
 
 	return (
 		<Content>
-			<Dropzone>
-				<Chat>
-					<ChatHeaderComponent
-						events={{
-							state: hideEvents,
-							action: setHideEvents,
-						}}
-						room={chat._id}
-						user={props}
-						admin={chat.participants.some(
-							(p: IUser) =>
-								p.sub === props.sub && p.role === 'admin'
-						)}
-					/>
-					<Messages>
-						{chat.messages
-							.filter((m: IMessage) =>
-								hideEvents ? m.type !== 'event' : m
-							)
-							.map((m: IMessage, i: number) => (
-								<ChatMessageComponent
-									key={i}
-									message={m}
-									sub={props.sub}
-								/>
-							))}
-					</Messages>
-				</Chat>
-
-				<ChatFormComponent
+			<Chat>
+				<ChatHeaderComponent
+					events={{
+						state: hideEvents,
+						action: setHideEvents,
+					}}
 					room={chat._id}
 					user={props}
-					socket={socket}
+					admin={chat.participants.some(
+						(p: IUser) => p.sub === props.sub && p.role === 'admin'
+					)}
 				/>
-			</Dropzone>
+				<Messages>
+					{chat.messages
+						.filter((m: IMessage) =>
+							hideEvents ? m.type !== 'event' : m
+						)
+						.map((m: IMessage, i: number) => (
+							<ChatMessageComponent
+								key={i}
+								message={m}
+								sub={props.sub}
+							/>
+						))}
+				</Messages>
+			</Chat>
+
+			<ChatFormComponent room={chat._id} user={props} socket={socket} />
 		</Content>
 	);
 }

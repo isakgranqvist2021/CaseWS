@@ -1,37 +1,21 @@
 /** @format */
 
+import { useCallback } from 'react';
 import { formatDistance } from 'date-fns';
 import { AvatarItem } from 'Styles/styles';
 import styled from 'styled-components';
 
-const Event = styled.div`
-	padding: 6px;
-	font-size: 12px;
-	display: flex;
-	gap: 10px;
-
-	&:not(:last-of-type) {
-		margin-bottom: 10px;
-	}
+const Avatar = styled.div`
+	position: absolute;
+	right: -15px;
+	top: -15px;
 `;
 
 const Uploads = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
-
-	img {
-		max-height: 200px;
-		object-fit: contain;
-		margin-right: auto;
-		display: block;
-	}
-`;
-
-const Files = styled.div`
-	a {
-		color: #fff;
-	}
+	margin: 10px 0;
 `;
 
 const Images = styled.div`
@@ -39,7 +23,7 @@ const Images = styled.div`
 	flex-wrap: wrap;
 
 	img {
-		max-height: 200px;
+		width: 150px;
 		object-fit: contain;
 		margin-right: auto;
 		display: block;
@@ -47,39 +31,48 @@ const Images = styled.div`
 `;
 
 const Message = styled.div`
-	color: #ffffff;
-	padding: 15px;
-	background-color: #187ef3;
 	position: relative;
-	background-color: #494949;
-	border-radius: 0.4em;
-	width: 75%;
-	display: flex;
+	margin: 10px 0;
 
-	&:not(:last-of-type) {
-		margin-bottom: 15px;
-	}
+	&.message,
+	&.file {
+		color: #ffffff;
+		padding: 15px;
+		position: relative;
+		background-color: #ffffff;
+		border-radius: 0.4em;
+		width: 75%;
+		display: flex;
+		background-color: #3a3a3a;
+		margin: 25px 0;
 
-	&.me {
-		background-color: #929292;
-	}
-
-	@media (max-width: 960px) {
-		width: 90%;
+		@media (max-width: 960px) {
+			width: 90%;
+		}
 	}
 `;
 
 const Body = styled.div`
 	flex-grow: 1;
 	margin-left: 10px;
+	color: #ffffff;
+
+	&.event {
+		color: #333;
+		display: flex;
+		font-size: 13px;
+
+		span {
+			margin-right: 10px;
+		}
+	}
 `;
 
 const Header = styled.header`
 	display: flex;
-	color: #ffffff;
 	font-size: 13px;
 	gap: 10px;
-	margin-bottom: 10px;
+	color: #da6bff;
 `;
 
 export default function ChatMessageComponent(props: {
@@ -87,73 +80,87 @@ export default function ChatMessageComponent(props: {
 	sub: string | undefined;
 }): JSX.Element {
 	const { message } = props;
-	console.log(message);
 
-	let date = message.createdAt;
-	if (typeof date === 'string') {
-		date = formatDistance(new Date(message.createdAt), new Date(), {
-			addSuffix: true,
-		});
-	}
+	const formatDate = useCallback((): string => {
+		return formatDistance(
+			typeof message.createdAt === 'string'
+				? new Date(message.createdAt)
+				: message.createdAt,
+			new Date(),
+			{
+				addSuffix: true,
+			}
+		);
+	}, [props.message.createdAt]);
 
-	if (message.type === 'file') {
-		return (
-			<Message className={message.user.sub === props.sub ? 'me' : ''}>
-				<AvatarItem>
-					<img src={message.user.picture} />
-				</AvatarItem>
-				<Body>
-					<Header>
-						<span>{date}</span>
-						<span>{message.user.nickname}</span>
-					</Header>
-					{message.files && (
-						<Uploads>
-							<Files>
+	const fileExists = useCallback((): boolean => {
+		if (!message.files) return false;
+
+		return message.files.some((f: any) => f.fileType === 'file');
+	}, [props.message]);
+
+	return (
+		<Message
+			className={[
+				message.type,
+				message.user.sub === props.sub ? 'me' : '',
+			].join(' ')}>
+			{message.type !== 'event' && (
+				<Avatar title={message.user.nickname}>
+					<AvatarItem>
+						<img src={message.user.picture} />
+					</AvatarItem>
+				</Avatar>
+			)}
+			<Body className={message.type}>
+				<Header>
+					{message.type !== 'event' && (
+						<span>
+							{message.user.sub === props.sub
+								? 'You'
+								: message.user.nickname}
+						</span>
+					)}
+					<span>{formatDate()}</span>
+				</Header>
+
+				{message.files && (
+					<Uploads>
+						{fileExists() && (
+							<div>
 								{message.files
 									.filter((f: any) => f.fileType === 'file')
 									.map((f: any, i: number) => (
-										<a key={i} href={f.src} target='_blank'>
+										<a
+											key={i}
+											href={f.src}
+											target='_blank'
+											style={{ color: '#fff' }}>
 											{f.filename}
 										</a>
 									))}
-							</Files>
+							</div>
+						)}
 
-							<Images>
-								{message.files
-									.filter((f: any) => f.fileType === 'image')
-									.map((f: any, i: number) => (
-										<a key={i} href={f.src} target='_blank'>
-											<img src={f.src} alt={f.filename} />
-										</a>
-									))}
-							</Images>
-						</Uploads>
-					)}
-				</Body>
-			</Message>
-		);
-	}
+						<Images>
+							{message.files
+								.filter((f: any) => f.fileType === 'image')
+								.map((f: any, i: number) => (
+									<a key={i} href={f.src} target='_blank'>
+										<img src={f.src} alt={f.filename} />
+									</a>
+								))}
+						</Images>
+					</Uploads>
+				)}
 
-	if (message.type === 'event')
-		return (
-			<Event>
-				<span>{date}</span>
-				<p>{message.message}</p>
-			</Event>
-		);
-
-	return (
-		<Message className={message.user.sub === props.sub ? 'me' : ''}>
-			<AvatarItem>
-				<img src={message.user.picture} />
-			</AvatarItem>
-			<Body>
-				<Header>
-					<span>{date}</span>
-					<span>{message.user.nickname}</span>
-				</Header>
-				<p>{message.message}</p>
+				<p
+					style={{
+						marginTop:
+							!message.files && message.type !== 'event' ? 10 : 0,
+					}}>
+					{message.message}
+				</p>
 			</Body>
 		</Message>
 	);
