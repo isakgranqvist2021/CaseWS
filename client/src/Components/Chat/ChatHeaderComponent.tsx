@@ -25,11 +25,7 @@ export default function ChatHeaderComponent(props: {
 		<Header>
 			{props.admin && <SearchComponent room={props.room} />}
 			{!props.admin && <span></span>}
-			<ChatActionsComponent
-				user={props.user}
-				admin={props.admin}
-				events={props.events}
-			/>
+			<ChatActionsComponent {...props} />
 		</Header>
 	);
 }

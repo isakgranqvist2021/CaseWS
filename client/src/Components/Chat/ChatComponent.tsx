@@ -9,6 +9,7 @@ import ChatHeaderComponent from 'Components/Chat/ChatHeaderComponent';
 import NoChatComponent from 'Components/Chat/NoChatComponent';
 import settings from 'Utils/settings';
 import chatStore from 'Store/chat.store';
+import sidebarStore from 'Store/sidebar.store';
 
 const Content = styled.div`
 	width: 100%;
@@ -109,8 +110,14 @@ export default function ChatComponent(props: IUser) {
 		socket.onmessage = (event: any) => {
 			let data = JSON.parse(event.data);
 
-			if (data.type === 'event') {
-				console.log(data);
+			if (data.type === 'occurance' && data.reason === 'left') {
+				sidebarStore.dispatch({
+					type: 'remove user',
+					payload: {
+						user: data.user.sub,
+						room: data.room,
+					},
+				});
 			}
 
 			setMessage(data);

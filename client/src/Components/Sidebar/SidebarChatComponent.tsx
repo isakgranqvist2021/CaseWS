@@ -36,7 +36,6 @@ export default function SidebarChatComponent(props: {
 	active: boolean;
 	action: any;
 }): JSX.Element {
-	const [loading, setLoading] = useState<boolean>(false);
 	const { chat, active, action } = props;
 
 	return (

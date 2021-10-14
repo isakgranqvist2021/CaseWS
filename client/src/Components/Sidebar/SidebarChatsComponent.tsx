@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { GET } from 'Utils/http';
 import chatStore from 'Store/chat.store';
+import sidebarStore from 'Store/sidebar.store';
 import participantsStore from 'Store/participants.store';
 import SidebarChatComponent from './SidebarChatComponent';
 
@@ -16,6 +17,7 @@ export default function SidebarChatsComponent(props: {
 		user: IUser;
 		room: string;
 	} | null>(null);
+	const [pl, setPl] = useState<{ user: string; room: string } | null>(null);
 
 	const fetchChats = async (signal: AbortSignal) => {
 		const response = await GET({
@@ -30,7 +32,6 @@ export default function SidebarChatsComponent(props: {
 	const fetchChat = async (room: string) => {
 		const abortController = new AbortController();
 
-		setTimeout(() => () => abortController.abort(), 5000);
 		const response = await GET({
 			path: '/chat/find/' + room,
 			signal: abortController.signal,
@@ -83,6 +84,26 @@ export default function SidebarChatsComponent(props: {
 	};
 
 	useEffect(() => {
+		if (!pl) return;
+		let copy = chats;
+		let chatIndex = copy.findIndex((c: IChat) => c._id === pl.room);
+		if (chatIndex < 0) return;
+
+		if (props.user.sub === pl.user) {
+			copy.splice(chatIndex, 1);
+			return setChats([...copy]);
+		}
+
+		copy[chatIndex].participants.splice(
+			copy[chatIndex].participants.findIndex(
+				(u: IUser) => u.sub === pl.user
+			),
+			1
+		);
+		return setChats([...copy]);
+	}, [pl]);
+
+	useEffect(() => {
 		if (!np) return;
 		let update = chats;
 		let room = update.find((c: IChat) => c._id === np?.room);
@@ -108,6 +129,20 @@ export default function SidebarChatsComponent(props: {
 		if (!props.newChat) return;
 		setChats([...chats, props.newChat]);
 	}, [props.newChat]);
+
+	useEffect(() => {
+		sidebarStore.subscribe(() => {
+			let state = sidebarStore.getState();
+
+			if (!state) return;
+			if (state.event === 'set active') return setActive(null);
+			if (state.event === 'remove user')
+				return setPl({
+					user: state.payload.user,
+					room: state.payload.room,
+				});
+		});
+	}, []);
 
 	return (
 		<div>

@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { Button } from 'Styles/styles';
 import { POST } from 'Utils/http';
 import styled from 'styled-components';
+import chatStore from 'Store/chat.store';
+import sidebarStore from 'Store/sidebar.store';
 
 const Menu = styled.div`
 	position: relative;
@@ -48,8 +50,9 @@ const ListItem = styled.li`
 `;
 
 export default function ChatActionsComponent(props: {
-	user: IUser;
+	room: string;
 	admin: boolean;
+	user: IUser;
 	events: {
 		state: boolean;
 		action: any;
@@ -61,12 +64,26 @@ export default function ChatActionsComponent(props: {
 		setOpen(false);
 	};
 
-	const leave = () => {
-		console.log('leave');
-	};
+	const leave = async () => {
+		sidebarStore.dispatch({ type: 'set active', payload: null });
+		chatStore.dispatch({
+			type: 'leave',
+			payload: {
+				chat: null,
+				room1: undefined,
+				room2: props.room,
+			},
+		});
 
-	const report = () => {
-		console.log('report');
+		const response = await POST({
+			path: '/chat/leave',
+			body: JSON.stringify({
+				room: props.room,
+				user: props.user,
+			}),
+		});
+
+		console.log(response);
 	};
 
 	const delChat = () => {};
