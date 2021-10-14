@@ -80,6 +80,8 @@ export default function ChatComponent(props: IUser) {
 	};
 
 	const join = (room: string): void => {
+		if (socket.OPEN !== 1) return window.alert('connection lost');
+
 		return socket.send(
 			JSON.stringify({
 				type: 'join',
