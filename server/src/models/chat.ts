@@ -46,7 +46,14 @@ const updateOne = async (filter: any, update: any): Promise<any> => {
 	try {
 		return await ChatModel.updateOne(filter, update);
 	} catch (err) {
-		console.log(err);
+		return Promise.reject(err);
+	}
+};
+
+const deleteOne = async (filter: any): Promise<any> => {
+	try {
+		return await ChatModel.deleteOne(filter);
+	} catch (err) {
 		return Promise.reject(err);
 	}
 };
@@ -56,4 +63,5 @@ export default {
 	findOne,
 	findMany,
 	updateOne,
+	deleteOne,
 };
