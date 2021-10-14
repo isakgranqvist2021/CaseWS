@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import ChatFormComponent from 'Components/Chat/ChatFormComponent';
 import ChatMessageComponent from 'Components/Chat/ChatMessageComponent';
 import ChatHeaderComponent from 'Components/Chat/ChatHeaderComponent';
+import ChatParticipantsComponent from 'Components/Chat/ChatParticipantsComponent';
 import NoChatComponent from 'Components/Chat/NoChatComponent';
 import settings from 'Utils/settings';
 import chatStore from 'Store/chat.store';
@@ -17,6 +18,7 @@ const Content = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	position: relative;
 `;
 
 const Chat = styled.div`
@@ -33,11 +35,20 @@ const Messages = styled.div`
 `;
 
 export default function ChatComponent(props: IUser) {
-	const [socket, setSocket] = useState<WebSocket>(new WebSocket(settings.ws));
+	const socket: WebSocket = new WebSocket(settings.ws);
 	const [chat, setChat] = useState<IChat | null>(null);
 	const [message, setMessage] = useState<any>();
 	const [mutate, setMutate] = useState<string>('');
 	const [hideEvents, setHideEvents] = useState<boolean>(false);
+
+	const [part, setPart] = useState<IParticipant[]>([]);
+	const [t, setT] = useState<{
+		type: 'occurance';
+		reason: 'typing';
+		room: string;
+		sub: string;
+		newState: boolean;
+	} | null>(null);
 
 	const stateChange = () => {
 		let ns = chatStore.getState();
@@ -56,6 +67,15 @@ export default function ChatComponent(props: IUser) {
 				join(ns.room1);
 				break;
 		}
+
+		setPart(
+			ns.chat.participants.map((u: IUser) => ({
+				sub: u.sub,
+				picture: u.picture,
+				nickname: u.nickname,
+				isTyping: false,
+			}))
+		);
 
 		return setChat(ns.chat);
 	};
@@ -83,42 +103,66 @@ export default function ChatComponent(props: IUser) {
 	};
 
 	useEffect(() => {
-		if (mutate.length === 0) return;
-		setChat(null);
-		setMutate('');
-	}, [mutate]);
+		if (message && chat) {
+			setChat({
+				...chat,
+				messages: [...chat.messages, message],
+			});
+			return setMessage(null);
+		}
 
-	useEffect(() => {
-		if (!chat) return;
-		setChat({
-			...chat,
-			messages: [...chat.messages, message],
-		});
-	}, [message]);
+		if (mutate.length > 0) {
+			setChat(null); // remove active chat and display the "waiting room" screen
+			return setMutate(''); // when the mutate state is updated this if statement will evaluate to true.
+			// the reason for this is because the local state isn't always available in the redux subscribe callback
+		}
+
+		if (t) {
+			let copy = part;
+			let u = copy.find((u: IParticipant) => u.sub && u.sub === t.sub);
+			if (!u) return;
+			u.isTyping = t.newState;
+			setPart([...copy]);
+			return setT(null);
+		}
+	}, [message, mutate, t]);
 
 	useEffect(() => {
 		let us = chatStore.subscribe(stateChange);
 
-		socket.onopen = () => {
-			console.log('WebSocket -> OPEN');
-		};
-
+		socket.onerror = () => window.location.reload();
 		socket.onclose = () => {
-			setSocket(new WebSocket(settings.ws));
-		};
+			if (!chat) return;
 
+			sidebarStore.dispatch({
+				type: 'set active',
+				payload: null,
+			});
+
+			chatStore.dispatch({
+				type: 'leave',
+				payload: {
+					chat: null,
+					room1: undefined,
+					room2: chat._id,
+				},
+			});
+		};
+		socket.onopen = () => console.log('WebSocket -> OPEN');
 		socket.onmessage = (event: any) => {
 			let data = JSON.parse(event.data);
 
-			if (data.type === 'occurance' && data.reason === 'left') {
-				sidebarStore.dispatch({
+			if (data.type === 'occurance' && data.reason === 'left')
+				return sidebarStore.dispatch({
 					type: 'remove user',
 					payload: {
 						user: data.user.sub,
 						room: data.room,
 					},
 				});
-			}
+
+			if (data.type === 'occurance' && data.reason === 'typing')
+				return setT(data);
 
 			setMessage(data);
 		};
@@ -130,6 +174,8 @@ export default function ChatComponent(props: IUser) {
 
 	return (
 		<Content>
+			<ChatParticipantsComponent participants={part} />
+
 			<Chat>
 				<ChatHeaderComponent
 					events={{
@@ -157,7 +203,12 @@ export default function ChatComponent(props: IUser) {
 				</Messages>
 			</Chat>
 
-			<ChatFormComponent room={chat._id} user={props} socket={socket} />
+			<ChatFormComponent
+				room={chat._id}
+				user={props}
+				socket={socket}
+				participants={part}
+			/>
 		</Content>
 	);
 }

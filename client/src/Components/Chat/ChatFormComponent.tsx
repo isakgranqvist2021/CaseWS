@@ -43,14 +43,51 @@ export default function ChatFormComponent(props: {
 	room: string;
 	user: IUser;
 	socket: WebSocket;
+	participants: IParticipant[];
 }): JSX.Element {
 	const [message, setMessage] = useState<string>('');
 	const [drag, setDrag] = useState<boolean>(false);
+
+	const onType = (value: string) => {
+		setMessage(value);
+
+		let isAlreadyTyping = props.participants.some((p: IParticipant) => {
+			return p.sub === props.user.sub && p.isTyping;
+		});
+
+		if (!props.socket.OPEN) {
+			console.log('socket not open');
+		}
+
+		if (isAlreadyTyping && !value) {
+			return props.socket.send(
+				JSON.stringify({
+					type: 'occurance',
+					reason: 'typing',
+					room: props.room,
+					sub: props.user.sub,
+					newState: false,
+				})
+			);
+		}
+
+		if (!isAlreadyTyping && value)
+			props.socket.send(
+				JSON.stringify({
+					type: 'occurance',
+					reason: 'typing',
+					room: props.room,
+					sub: props.user.sub,
+					newState: true,
+				})
+			);
+	};
 
 	const send = (): void => {
 		if (!message) return;
 
 		if (!props.socket.OPEN) {
+			console.log(props.socket.OPEN);
 			window.alert('connection has closed');
 			window.location.reload();
 		}
@@ -61,6 +98,16 @@ export default function ChatFormComponent(props: {
 				room: props.room,
 				user: props.user,
 				message: message,
+			})
+		);
+
+		props.socket.send(
+			JSON.stringify({
+				type: 'occurance',
+				reason: 'typing',
+				room: props.room,
+				sub: props.user.sub,
+				newState: false,
 			})
 		);
 		setMessage('');
@@ -130,7 +177,7 @@ export default function ChatFormComponent(props: {
 				onKeyPress={handleKeyPress}
 				placeholder='Message..'
 				value={message}
-				onChange={(e: any) => setMessage(e.target.value)}
+				onChange={(e: any) => onType(e.target.value)}
 			/>
 			<Button
 				style={{

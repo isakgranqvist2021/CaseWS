@@ -34,3 +34,10 @@ interface IAction {
 	type: string;
 	payload: any;
 }
+
+interface IParticipant {
+	sub?: string;
+	picture?: string;
+	nickname?: string;
+	isTyping: boolean;
+}

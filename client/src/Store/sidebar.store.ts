@@ -1,6 +1,6 @@
 /** @format */
 
-import { createStore } from 'redux';
+import { createStore } from '@reduxjs/toolkit';
 
 interface State {
 	event: string;

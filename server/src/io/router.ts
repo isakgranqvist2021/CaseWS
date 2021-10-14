@@ -1,9 +1,10 @@
 /** @format */
 
 import WebSocket from 'ws';
-import join from '../io/join';
-import leave from '../io/leave';
-import send from '../io/send';
+import join from './join';
+import leave from './leave';
+import send from './send';
+import occurance from './occurance';
 
 export default function io(ws: WebSocket) {
 	ws.on('message', (e: any, isBinary: boolean) => {
@@ -16,6 +17,8 @@ export default function io(ws: WebSocket) {
 				return send(ws, payload, isBinary);
 			case 'leave':
 				return leave(ws, payload, isBinary);
+			case 'occurance':
+				return occurance(ws, payload, isBinary);
 			default:
 				return;
 		}

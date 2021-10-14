@@ -11,6 +11,8 @@ export interface IMessage {
 	eventType?: string;
 	files?: any[];
 	room?: string;
+	newState?: any;
+	sub?: string;
 }
 
 export interface IRoom {

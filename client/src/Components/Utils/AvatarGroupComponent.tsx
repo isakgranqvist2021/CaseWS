@@ -13,7 +13,7 @@ export default function AvatarGroupComponent(props: {
 	images: any[];
 }): JSX.Element {
 	const overflow = props.images.length - props.max;
-	const [ints, setInts] = useState<any>([]);
+	const [ints, setInts] = useState<number[]>([]);
 
 	return (
 		<AvatarGroup>

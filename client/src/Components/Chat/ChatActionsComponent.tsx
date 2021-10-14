@@ -49,6 +49,9 @@ const ListItem = styled.li`
 	}
 `;
 
+const confirmMessage =
+	'If your the last person in this chat room the room will be disbanded';
+
 export default function ChatActionsComponent(props: {
 	room: string;
 	admin: boolean;
@@ -65,15 +68,7 @@ export default function ChatActionsComponent(props: {
 	};
 
 	const leave = async () => {
-		sidebarStore.dispatch({ type: 'set active', payload: null });
-		chatStore.dispatch({
-			type: 'leave',
-			payload: {
-				chat: null,
-				room1: undefined,
-				room2: props.room,
-			},
-		});
+		if (!window.confirm(confirmMessage)) return;
 
 		const response = await POST({
 			path: '/chat/leave',
@@ -84,6 +79,20 @@ export default function ChatActionsComponent(props: {
 		});
 
 		if (response.success) {
+			sidebarStore.dispatch({
+				type: 'set active',
+				payload: null,
+			});
+
+			chatStore.dispatch({
+				type: 'leave',
+				payload: {
+					chat: null,
+					room1: undefined,
+					room2: props.room,
+				},
+			});
+
 			sidebarStore.dispatch({
 				type: 'remove user',
 				payload: {

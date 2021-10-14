@@ -23,14 +23,14 @@ export default async function leave_chat(req: Request, res: Response) {
 
 	if (!req.body.user.sub)
 		return res.json({
-			message: 'missing required data [user]',
+			message: 'missing required data [user.sub]',
 			success: false,
 			data: null,
 		});
 
-	if (!req.body.nickname)
+	if (!req.body.user.nickname)
 		return res.json({
-			message: 'missing required data [user]',
+			message: 'missing required data [user.nickname]',
 			success: false,
 			data: null,
 		});
