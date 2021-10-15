@@ -79,6 +79,8 @@ export default function ChatComponent(props: IUser) {
 		socket.onmessage = (event: any) => {
 			let data = JSON.parse(event.data);
 
+			console.log(data);
+
 			if (data.type === 'occurance' && data.reason === 'left')
 				return chatsStore.dispatch({
 					type: 'remove user',
