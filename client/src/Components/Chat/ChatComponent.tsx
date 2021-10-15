@@ -88,17 +88,24 @@ export default function ChatComponent(props: IUser) {
 					},
 				});
 
-			if (data.type === 'occurance' && data.reason === 'typing') {
-				return;
-			}
+			if (data.type === 'occurance' && data.reason === 'typing')
+				return partStore.dispatch({
+					type: 'update',
+					payload: {
+						sub: data.sub,
+						newState: data.newState,
+					},
+				});
 
-			return chatStore.dispatch({
-				type: 'add message',
-				payload: {
-					message: data,
-					evType: data.type,
-				},
-			});
+			if (data) {
+				return chatStore.dispatch({
+					type: 'add message',
+					payload: {
+						message: data,
+						evType: data.type,
+					},
+				});
+			}
 		};
 
 		chatStore.subscribe(() => {

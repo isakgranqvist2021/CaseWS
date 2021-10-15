@@ -29,8 +29,9 @@ const addMessage = (
 	payload: { message: IMessage; evType: string }
 ): State | null => {
 	if (!state) return null;
-
+	if (!state.chat) return null;
 	let newState = state;
+
 	newState.chat.messages.push(payload.message);
 
 	return {
@@ -48,7 +49,8 @@ export default createStore((state: State | null = null, action: IAction) => {
 			return addMessage(state, action.payload);
 
 		case 'remove':
-			return (state = null);
+			return null;
 	}
+
 	return state;
 });
