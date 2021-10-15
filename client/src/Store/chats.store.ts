@@ -14,6 +14,13 @@ const removeUser = (state: IChat[], room: string, sub: string): IChat[] => {
 	return newState;
 };
 
+const removeChat = (state: IChat[], room: string): IChat[] => {
+	let newState = state;
+	let i = newState.findIndex((c: IChat) => c._id === room);
+	newState.splice(i, 1);
+	return newState;
+};
+
 const addUser = (state: IChat[], room: string, user: IUser): IChat[] => {
 	let newState = state;
 
@@ -29,16 +36,15 @@ export default createStore((state: IChat[] = [], action: IAction) => {
 			return action.payload;
 
 		case 'remove user':
-			return (state = removeUser(
-				state,
-				action.payload.room,
-				action.payload.user
-			));
+			return removeUser(state, action.payload.room, action.payload.user);
+
+		case 'remove chat':
+			return removeChat(state, action.payload.room);
 
 		case 'add user':
 			return addUser(state, action.payload.room, action.payload.user);
 
-		case 'add one':
+		case 'add chat':
 			return [...state, action.payload];
 
 		default:

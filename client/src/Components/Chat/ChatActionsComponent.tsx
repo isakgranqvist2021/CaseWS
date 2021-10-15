@@ -85,9 +85,8 @@ export default function ChatActionsComponent(props: {
 			});
 
 			chatsStore.dispatch({
-				type: 'remove user',
+				type: 'remove chat',
 				payload: {
-					user: response.data.user.sub,
 					room: response.data.room,
 				},
 			});

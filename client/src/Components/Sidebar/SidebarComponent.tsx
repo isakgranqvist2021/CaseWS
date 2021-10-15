@@ -71,7 +71,24 @@ const Content = styled.div`
 
 const Footer = styled.footer`
 	width: 100%;
+	padding: 10px;
 	display: flex;
+	flex-direction: column;
+
+	button {
+		width: 100%;
+		border-radius: 5px;
+		background-color: #7e2d97;
+		color: #fff;
+
+		&:not(:last-of-type) {
+			margin-bottom: 10px;
+		}
+
+		&:hover {
+			color: #7e2d97;
+		}
+	}
 `;
 
 export default function SidebarComponent(props: IUser): JSX.Element {
@@ -91,7 +108,7 @@ export default function SidebarComponent(props: IUser): JSX.Element {
 
 		if (response.success)
 			return chatsStore.dispatch({
-				type: 'add one',
+				type: 'add chat',
 				payload: response.data,
 			});
 	};
@@ -105,13 +122,13 @@ export default function SidebarComponent(props: IUser): JSX.Element {
 						<SidebarChatsComponent user={props} />
 					</Content>
 					<Footer>
+						<Button onClick={submit}>New Room</Button>
 						<Button
 							onClick={() =>
 								logout({ returnTo: 'http://localhost:3000' })
 							}>
 							Log Out
 						</Button>
-						<Button onClick={submit}>New Room</Button>
 					</Footer>
 				</Body>
 			</Aside>
