@@ -108,7 +108,10 @@ export default function ChatMessageComponent(props: {
 			{message.type !== 'event' && (
 				<Avatar title={message.user.nickname}>
 					<AvatarItem>
-						<img src={message.user.picture} />
+						<img
+							src={message.user.picture}
+							alt={message.user.nickname}
+						/>
 					</AvatarItem>
 				</Avatar>
 			)}
@@ -134,6 +137,7 @@ export default function ChatMessageComponent(props: {
 										<a
 											key={i}
 											href={f.src}
+											rel='noreferrer'
 											target='_blank'
 											style={{ color: '#fff' }}>
 											{f.filename}
@@ -146,7 +150,11 @@ export default function ChatMessageComponent(props: {
 							{message.files
 								.filter((f: any) => f.fileType === 'image')
 								.map((f: any, i: number) => (
-									<a key={i} href={f.src} target='_blank'>
+									<a
+										key={i}
+										href={f.src}
+										rel='noreferrer'
+										target='_blank'>
 										<img src={f.src} alt={f.filename} />
 									</a>
 								))}

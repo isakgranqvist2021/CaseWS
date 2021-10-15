@@ -1,7 +1,6 @@
 /** @format */
 
 import styled from 'styled-components';
-import IconComponent from '../Utils/IconComponent';
 
 const Header = styled.header`
 	display: flex;

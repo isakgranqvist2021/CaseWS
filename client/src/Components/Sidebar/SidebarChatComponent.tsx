@@ -1,6 +1,5 @@
 /** @format */
 
-import { useState } from 'react';
 import AvatarGroupComponent from 'Components/Utils/AvatarGroupComponent';
 import IconComponent from '../Utils/IconComponent';
 import styled from 'styled-components';

@@ -8,6 +8,7 @@ import IconComponent from 'Components/Utils/IconComponent';
 import { POST } from 'Utils/http';
 import { AvatarItem } from 'Styles/styles';
 import { Input, Button } from 'Styles/styles';
+import partStore from 'Store/part.store';
 
 const Form = styled.div`
 	width: 50%;
@@ -88,6 +89,11 @@ export default function ChatSearchComponent(props: {
 		});
 
 		window.alert(response.message);
+
+		partStore.dispatch({
+			type: 'add user',
+			payload: u,
+		});
 
 		if (response.success) {
 			chatsStore.dispatch({

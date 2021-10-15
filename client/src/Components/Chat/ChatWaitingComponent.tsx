@@ -24,6 +24,7 @@ export default function ChatWaitingComponent(): JSX.Element {
 			<h2>Waiting room...</h2>
 			<img
 				height='400'
+				alt='Waiting Room..'
 				src={process.env.PUBLIC_URL + '/undraw_Group_chat_re_frmo.svg'}
 			/>
 		</Container>

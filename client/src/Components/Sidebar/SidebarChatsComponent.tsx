@@ -60,18 +60,23 @@ export default function SidebarChatsComponent(props: {
 		const abortController = new AbortController();
 		fetchChats(abortController.signal);
 
-		chatsStore.subscribe(() => {
+		let us1 = chatsStore.subscribe(() => {
 			setChats([...chatsStore.getState()]);
 		});
 
-		chatStore.subscribe(() => {
+		let us2 = chatStore.subscribe(() => {
 			let newState = chatStore.getState();
 
 			if (newState && newState.chat) return setActive(newState.chat._id);
 
 			return setActive(null);
 		});
-		return () => abortController.abort();
+
+		return () => {
+			abortController.abort();
+			us1();
+			us2();
+		};
 	}, [props.user.sub]);
 
 	return (
