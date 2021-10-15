@@ -8,6 +8,7 @@ import SidebarChatsComponent from 'Components/Sidebar/SidebarChatsComponent';
 import IconComponent from 'Components/Utils/IconComponent';
 import styled from 'styled-components';
 import { useState } from 'react';
+import chatsStore from 'Store/chats.store';
 
 const Aside = styled.aside`
 	display: flex;
@@ -75,7 +76,6 @@ const Footer = styled.footer`
 
 export default function SidebarComponent(props: IUser): JSX.Element {
 	const { logout } = useAuth0();
-	const [newChat, setNewChat] = useState<IChat | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 
 	const submit = async () => {
@@ -89,9 +89,11 @@ export default function SidebarComponent(props: IUser): JSX.Element {
 
 		window.alert(response.message);
 
-		if (response.success) {
-			setNewChat(response.data);
-		}
+		if (response.success)
+			return chatsStore.dispatch({
+				type: 'add one',
+				payload: response.data,
+			});
 	};
 
 	return (
@@ -100,7 +102,7 @@ export default function SidebarComponent(props: IUser): JSX.Element {
 				<Body>
 					<SidebarHeaderComponent {...props} />
 					<Content>
-						<SidebarChatsComponent user={props} newChat={newChat} />
+						<SidebarChatsComponent user={props} />
 					</Content>
 					<Footer>
 						<Button

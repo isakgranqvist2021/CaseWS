@@ -9,8 +9,6 @@ const allowedFileExt: string[] = [
 	'image/jpg',
 	'image/gif',
 	'image/svg+xml',
-	'application/pdf',
-	'text/plain',
 ];
 
 const storage = multer.diskStorage({

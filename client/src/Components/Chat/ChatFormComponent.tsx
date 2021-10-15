@@ -1,10 +1,11 @@
 /** @format */
 
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Input, Button } from 'Styles/styles';
 import { POST } from 'Utils/http';
 import styled from 'styled-components';
 import IconComponent from 'Components/Utils/IconComponent';
+import partStore from 'Store/part.store';
 
 const allowedFileExt: string[] = [
 	'image/jpeg',
@@ -12,8 +13,6 @@ const allowedFileExt: string[] = [
 	'image/jpg',
 	'image/gif',
 	'image/svg+xml',
-	'application/pdf',
-	'text/plain',
 ];
 
 const Form = styled.div`
@@ -43,15 +42,15 @@ export default function ChatFormComponent(props: {
 	room: string;
 	user: IUser;
 	socket: WebSocket;
-	participants: IParticipant[];
 }): JSX.Element {
 	const [message, setMessage] = useState<string>('');
 	const [drag, setDrag] = useState<boolean>(false);
+	const [part, setPart] = useState<IParticipant[]>([]);
 
 	const onType = (value: string) => {
 		setMessage(value);
 
-		let isAlreadyTyping = props.participants.some((p: IParticipant) => {
+		let isAlreadyTyping = part.some((p: IParticipant) => {
 			return p.sub === props.user.sub && p.isTyping;
 		});
 
@@ -137,13 +136,11 @@ export default function ChatFormComponent(props: {
 		formData.append('room', props.room);
 		formData.append('user', JSON.stringify(props.user));
 
-		const response = await POST({
+		await POST({
 			path: '/chat/upload',
 			body: formData,
 			headers: {},
 		});
-
-		window.alert(response.message);
 	};
 
 	const handleKeyPress = (e: any) => {
@@ -156,44 +153,39 @@ export default function ChatFormComponent(props: {
 		return false;
 	};
 
+	const dragStyles = useCallback((): any => {
+		return {
+			opacity: drag ? 0 : 1,
+			pointerEvents: drag ? 'none' : 'all',
+		};
+	}, []);
+
+	useEffect(() => {
+		partStore.subscribe(() => {
+			setPart([...partStore.getState()]);
+		});
+	}, []);
+
 	return (
 		<Form
 			className={drag ? 'active' : ''}
-			onDrop={(e: React.DragEvent<HTMLDivElement>) => upload(e)}
-			onDragOver={(e: React.DragEvent<HTMLDivElement>) =>
-				handleDrag(e, true)
-			}
-			onDragEnter={(e: React.DragEvent<HTMLDivElement>) =>
-				handleDrag(e, true)
-			}
-			onDragLeave={(e: React.DragEvent<HTMLDivElement>) =>
-				handleDrag(e, false)
-			}>
+			onDrop={(e: any) => upload(e)}
+			onDragOver={(e: any) => handleDrag(e, true)}
+			onDragEnter={(e: any) => handleDrag(e, true)}
+			onDragLeave={(e: any) => handleDrag(e, false)}>
 			<Input
-				style={{
-					opacity: drag ? 0 : 1,
-					pointerEvents: drag ? 'none' : 'all',
-				}}
+				style={dragStyles()}
 				onKeyPress={handleKeyPress}
 				placeholder='Message..'
 				value={message}
 				onChange={(e: any) => onType(e.target.value)}
 			/>
-			<Button
-				style={{
-					opacity: drag ? 0 : 1,
-					pointerEvents: drag ? 'none' : 'all',
-				}}
-				onClick={send}
-				small={true}>
+			<Button style={dragStyles()} onClick={send} small={true}>
 				<IconComponent icon='send' />
 			</Button>
 
 			{drag && (
-				<IconContainer
-					onDragOver={(e: React.DragEvent<HTMLDivElement>) =>
-						handleDrag(e, true)
-					}>
+				<IconContainer onDragOver={(e: any) => handleDrag(e, true)}>
 					<IconComponent icon='cloud_upload' />
 				</IconContainer>
 			)}

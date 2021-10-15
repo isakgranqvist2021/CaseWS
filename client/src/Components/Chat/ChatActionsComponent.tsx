@@ -6,7 +6,7 @@ import { Button } from 'Styles/styles';
 import { POST } from 'Utils/http';
 import styled from 'styled-components';
 import chatStore from 'Store/chat.store';
-import sidebarStore from 'Store/sidebar.store';
+import chatsStore from 'Store/chats.store';
 
 const Menu = styled.div`
 	position: relative;
@@ -79,21 +79,12 @@ export default function ChatActionsComponent(props: {
 		});
 
 		if (response.success) {
-			sidebarStore.dispatch({
-				type: 'set active',
+			chatStore.dispatch({
+				type: 'remove',
 				payload: null,
 			});
 
-			chatStore.dispatch({
-				type: 'leave',
-				payload: {
-					chat: null,
-					room1: undefined,
-					room2: props.room,
-				},
-			});
-
-			sidebarStore.dispatch({
+			chatsStore.dispatch({
 				type: 'remove user',
 				payload: {
 					user: response.data.user.sub,

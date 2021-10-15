@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import chatStore from 'Store/chat.store';
+import chatsStore from 'Store/chats.store';
 import styled from 'styled-components';
-import participantsStore from 'Store/participants.store';
 import IconComponent from 'Components/Utils/IconComponent';
 import { POST } from 'Utils/http';
 import { AvatarItem } from 'Styles/styles';
@@ -66,13 +66,10 @@ export default function ChatSearchComponent(props: {
 		});
 
 		if (response.success) setResults(response.data);
-
-		return;
 	};
 
 	useEffect(() => {
-		let us = chatStore.subscribe(() => setResults([]));
-		return () => us();
+		chatStore.subscribe(() => setResults([]));
 	}, []);
 
 	const handleKeyPress = (e: any) => {
@@ -93,8 +90,8 @@ export default function ChatSearchComponent(props: {
 		window.alert(response.message);
 
 		if (response.success) {
-			participantsStore.dispatch({
-				type: 'add',
+			chatsStore.dispatch({
+				type: 'add user',
 				payload: payload,
 			});
 		}
