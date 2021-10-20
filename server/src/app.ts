@@ -1,9 +1,7 @@
 /** @format */
 
-import { Server } from 'http';
-import WebSocket, { WebSocketServer } from 'ws';
-
-import express from 'express';
+import { app, server, wss } from './utils/io';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import connect from './utils/database';
 import dotenv from 'dotenv';
@@ -16,37 +14,19 @@ dotenv.config({
 connect();
 
 const PORT = process.env.PORT || 8080;
-const app = express();
-const server = new Server(app);
 
 import router from './router';
-import join from './io/join';
-import leave from './io/leave';
-import send from './io/send';
+import io from './io/router';
 
 app.use(express.json());
 app.use(cors());
+app.use('/public', express.static('./public'));
+app.use('/uploads', express.static('./uploads'));
 app.use('/chat', router);
+wss.on('connection', io);
 
-const wss = new WebSocketServer({
-	server: server,
-});
-
-wss.on('connection', (ws: WebSocket) => {
-	ws.on('message', (e: any, isBinary: boolean) => {
-		const event: any = JSON.parse(e);
-
-		switch (event.type) {
-			case 'join':
-				return join(ws, event, isBinary);
-			case 'message':
-				return send(ws, event, isBinary);
-			case 'leave':
-				return leave(ws, event, isBinary);
-			default:
-				return;
-		}
-	});
+app.get('*', (req: Request, res: Response) => {
+	return res.sendFile('./index.html', { root: './public' });
 });
 
 server.listen(PORT, () => {

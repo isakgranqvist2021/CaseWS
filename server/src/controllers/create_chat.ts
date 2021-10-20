@@ -12,6 +12,8 @@ export default async function create_chat(req: Request, res: Response) {
 			data: newChat,
 		});
 	} catch (err) {
+		console.log(err);
+
 		return res.json({
 			message: 'internal server error',
 			success: false,

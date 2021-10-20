@@ -27,14 +27,14 @@ const Container = styled.div`
 		border: none;
 		background-color: orange;
 		font-weight: 900;
-		color: #fff;
+		color: #faf7f0;
 		border-radius: 0.5rem;
 		cursor: pointer;
 		border: 1px solid transparent;
 		transition: all 300ms ease;
 
 		&:hover {
-			background-color: #fff;
+			background-color: #faf7f0;
 			border-color: orange;
 			color: orange;
 		}

@@ -10,13 +10,16 @@ interface IUser {
 	picture?: string;
 	sub?: string;
 	updated_at?: Date | string;
+	role?: 'admin' | 'participant';
 }
 
 interface IMessage {
 	message: string;
-	room: string;
 	createdAt: Date | string;
 	user: IUser;
+	type: 'event' | 'message' | 'file';
+	eventType?: 'join' | 'leave';
+	files?: any[];
 }
 
 interface IChat {
@@ -30,4 +33,11 @@ interface IChat {
 interface IAction {
 	type: string;
 	payload: any;
+}
+
+interface IParticipant {
+	sub?: string;
+	picture?: string;
+	nickname?: string;
+	isTyping: boolean;
 }

@@ -6,7 +6,7 @@ const Container = styled.div`
 	width: 100vw;
 	height: 100vh;
 	inset: 0;
-	background-color: #3333336e;
+	background-color: #faf7f0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -16,7 +16,7 @@ const Container = styled.div`
 		margin-top: 20px;
 		font-weight: 900;
 		font-size: 2rem;
-		color: #ffffff;
+		color: #000000;
 	}
 `;
 
@@ -28,7 +28,7 @@ const Loader = styled.div`
 
 	div {
 		position: absolute;
-		border: 4px solid rgb(255, 255, 255);
+		border: 4px solid rgb(65, 65, 65);
 		opacity: 1;
 		border-radius: 50%;
 		animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
