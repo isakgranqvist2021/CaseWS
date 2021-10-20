@@ -1,7 +1,7 @@
 /** @format */
 
 import { app, server, wss } from './utils/io';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import connect from './utils/database';
 import dotenv from 'dotenv';
@@ -24,6 +24,10 @@ app.use('/public', express.static('./public'));
 app.use('/uploads', express.static('./uploads'));
 app.use('/chat', router);
 wss.on('connection', io);
+
+app.get('*', (req: Request, res: Response) => {
+	return res.sendFile('./index.html', { root: './public' });
+});
 
 server.listen(PORT, () => {
 	console.log(`Server listening on ${process.env.HOST}:${process.env.PORT}`);
